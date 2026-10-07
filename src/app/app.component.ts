@@ -1,14 +1,15 @@
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { getMembers, getScorers } from '../services/content';
+import { IconComponent } from './icon.component';
 import { PhotoDirective } from './photo.directive';
 import { RevealDirective } from './reveal.directive';
 
 @Component({
   selector: 'app-root', standalone: true,
-  imports: [PhotoDirective, RevealDirective],
+  imports: [PhotoDirective, RevealDirective, IconComponent],
   templateUrl: './app.component.html',
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly members = getMembers();
   readonly scoring = getScorers();
   readonly scorers = [...this.scoring.players].sort((a, b) => b.goals - a.goals).map(player => ({
@@ -17,6 +18,25 @@ export class AppComponent implements OnInit, OnDestroy {
   readonly totalGoals = this.scorers.reduce((total, player) => total + player.goals, 0);
   readonly topScorer = this.scorers[0];
   readonly selected = signal<number | null>(null);
+  readonly showStickyContact = signal(false);
+  private contactObserver?: IntersectionObserver;
+
+  ngAfterViewInit() {
+    const visible = new Set<string>();
+    this.contactObserver = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) visible.add(entry.target.id);
+        else visible.delete(entry.target.id);
+      }
+      // Hero đã có CTA; không che controls giới thiệu hoặc form liên hệ.
+      this.showStickyContact.set(visible.size === 0);
+    }, { rootMargin: '0px 0px -72px 0px' });
+    for (const id of ['home', 'spotlight', 'contact']) {
+      const section = document.getElementById(id);
+      if (section) this.contactObserver.observe(section);
+    }
+  }
+
   readonly submitted = signal(false);
   readonly featured = signal(1);
   readonly outgoing = signal<number | null>(null);
@@ -112,5 +132,5 @@ export class AppComponent implements OnInit, OnDestroy {
     this.touchStart = null;
   }
   submit(event: Event) { event.preventDefault(); this.submitted.set(true); }
-  ngOnDestroy() { clearInterval(this.autoTimer); clearTimeout(this.exitTimer); this.close(); }
+  ngOnDestroy() { this.contactObserver?.disconnect(); clearInterval(this.autoTimer); clearTimeout(this.exitTimer); this.close(); }
 }

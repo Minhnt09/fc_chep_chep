@@ -64,3 +64,7 @@ Sau khi đẩy lên GitHub: vào Vercel → Add New → Project → Import repos
 ## Thống kê ghi bàn
 
 `src/data/scorers.json` chứa bảng **Trận 6** theo ảnh người dùng cung cấp (12 cầu thủ, 27 bàn). Cập nhật `label`, `name`, `goals`, `memberId` tại đây; giao diện tự sắp xếp giảm dần và cộng tổng. `memberId` liên kết ảnh thành viên; Silun đã được nối ảnh từ `img/silun/DUY.png`. Ảnh `img/domixi/DM.png` đã thêm vào đội hình với tên DM và biệt danh DOMIXI; Người dùng đã xác nhận DM/Domixi là cầu thủ khác Hadinggg. Hadinggg tiếp tục dùng chữ viết tắt vì chưa có ảnh; thống kê Domixi chưa được cung cấp. Không diễn giải bảng này thành tổng cả mùa hoặc thống kê 6 trận.
+
+## Icon và kiểm tra mobile
+
+`src/app/icon.component.ts` cung cấp icon SVG dùng chung, không sử dụng ký tự emoji cho nút điều khiển. Xem kết quả rà giao diện tại `markdown/mobile-ui-review.md`.

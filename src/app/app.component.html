@@ -1,16 +1,16 @@
 <header class="header">
   <a class="brand" href="#home" aria-label="FC Chẹp Chẹp — trang chủ"><img src="/images/design/crest.webp" alt="Logo FC Chẹp Chẹp từ video đội bóng" /><span>CHẸP CHẸP FC<small>FOOTBALL · FRIENDS · FAMILY</small></span></a>
-  <nav aria-label="Điều hướng chính"><a href="#members">ĐỘI HÌNH</a><a href="#contact">GIAO LƯU <span>↗</span></a></nav>
+  <nav aria-label="Điều hướng chính"><a href="#members">ĐỘI HÌNH</a><a href="#contact">GIAO LƯU <app-icon name="arrow-up-right" /></a></nav>
 </header>
 <main>
 <section id="home" class="hero">
   <div class="hero-topline"><span>CHẸP CHẸP FOOTBALL CLUB</span><span>ANH EM MỘT ĐỘI / 2026</span></div>
   <div class="hero-heading"><p class="eyebrow">KHÔNG CHỈ LÀ MỘT ĐỘI BÓNG.</p><h1><span>CHẸP CHẸP</span><span class="outline">HẾT MÌNH.</span></h1></div>
-  <div class="hero-note"><span class="small-cross" aria-hidden="true">✳</span><p>Gặp nhau vì trái bóng.<br/>Ở lại vì những người anh em.</p></div>
-  <div class="team-visual"><span class="team-stamp">CCFC<br/><small>ONE TEAM.</small></span><img appPhoto src="/images/team.webp" alt="Đội hình FC Chẹp Chẹp trong áo đấu trắng vàng cùng nâng cúp" loading="eager" /></div>
-  <div class="hero-bottom"><span>CHUNG MÀU ÁO.<br/>CHUNG ĐAM MÊ.</span><a class="button" href="#contact">BẮT ĐÔI GIAO LƯU <span>↗</span></a><a class="discover" href="#spotlight">GẶP ANH EM <span>↓</span></a></div>
+  <div class="hero-note"><p>Gặp nhau vì trái bóng.<br/>Ở lại vì những người anh em.</p></div>
+  <div class="team-visual"><img appPhoto src="/images/team.webp" alt="Đội hình FC Chẹp Chẹp trong áo đấu trắng vàng cùng nâng cúp" loading="eager" /></div>
+  <div class="hero-bottom"><span>CHUNG MÀU ÁO.<br/>CHUNG ĐAM MÊ.</span><a class="button" href="#contact">BẮT ĐÔI GIAO LƯU <app-icon name="arrow-up-right" /></a><a class="discover" href="#spotlight">GẶP ANH EM <app-icon name="arrow-down" /></a></div>
 </section>
-<div class="team-strip" aria-hidden="true"><span>CHẸP CHẸP FC</span><b>✳</b><span>ANH EM MỘT ĐỘI</span><b>✳</b><span>RA SÂN HẾT MÌNH</span><b>✳</b><span>CHẸP CHẸP FC</span></div>
+<div class="team-strip" aria-hidden="true"><span>CHẸP CHẸP FC</span><i class="strip-divider"></i><span>ANH EM MỘT ĐỘI</span><i class="strip-divider"></i><span>RA SÂN HẾT MÌNH</span><i class="strip-divider"></i><span>CHẸP CHẸP FC</span></div>
 <section appReveal id="spotlight" class="spotlight section-wrap">
   <div class="section-heading"><div><span class="eyebrow">01 / PLAYER INTRODUCTION</span><h2>GƯƠNG MẶT.<br/><em>CÁ TÍNH.</em></h2></div><p>Mỗi người một chất riêng.<br/>Cùng viết nên câu chuyện Chẹp Chẹp.</p></div>
   <div class="player-stage" [class.dark-stage]="featured() % 3 === 1" [class.slide-reverse]="slideDirection() < 0" (touchstart)="startFeatureTouch($event)" (touchend)="endFeatureTouch($event)">
@@ -26,18 +26,18 @@
       }
     }
     </div>
-    <div class="stage-bottom"><button class="text-button" (click)="open(featured())">XEM CHÂN DUNG ↗</button><div class="stage-controls"><button class="autoplay-toggle" (click)="toggleAutoplay()" [attr.aria-label]="autoplay() ? 'Tạm dừng tự đổi cầu thủ' : 'Bật tự đổi cầu thủ'" [attr.aria-pressed]="autoplay()">{{ autoplay() ? 'Ⅱ' : '▶' }}</button><button (click)="changeFeatured(-1)" aria-label="Giới thiệu thành viên trước">←</button><button (click)="changeFeatured(1)" aria-label="Giới thiệu thành viên tiếp theo">→</button></div></div>
+    <div class="stage-bottom"><button class="text-button" (click)="open(featured())">XEM CHÂN DUNG <app-icon name="arrow-up-right" /></button><div class="stage-controls"><button class="autoplay-toggle" (click)="toggleAutoplay()" [attr.aria-label]="autoplay() ? 'Tạm dừng tự đổi cầu thủ' : 'Bật tự đổi cầu thủ'" [attr.aria-pressed]="autoplay()"><app-icon [name]="autoplay() ? 'pause' : 'play'" /></button><button (click)="changeFeatured(-1)" aria-label="Giới thiệu thành viên trước"><app-icon name="arrow-left" /></button><button (click)="changeFeatured(1)" aria-label="Giới thiệu thành viên tiếp theo"><app-icon name="arrow-right" /></button></div></div>
   </div>
 </section>
     <section appReveal id="members" class="members section-wrap"><div class="section-heading"><div><span class="eyebrow">02 / THE SQUAD</span><h2>ANH EM<br/><em>CHẸP CHẸP.</em></h2></div><p>Mỗi người một cá tính.<br/>Cùng nhau thành một đội.</p></div><div class="member-grid">@for (member of members; track member.id; let index = $index) {
 <button class="member-card" (click)="open(index)" [attr.aria-label]="'Xem ảnh ' + member.name">
   <div class="portrait"><span class="card-name" aria-hidden="true">{{ member.nickname }}</span><span class="member-index">{{ (index + 1).toString().padStart(2, '0') }}</span>
     <img appPhoto [src]="member.image" [alt]="'Thành viên ' + member.name" loading="lazy" />
-    <span class="expand" aria-hidden="true">↗</span>
+    <span class="expand" aria-hidden="true"><app-icon name="expand" /></span>
   </div>
-  <div class="member-caption"><h3>{{ member.name }}</h3><p>{{ member.number !== null ? '#' + member.number + ' · ' : '' }}{{ member.position }}</p></div>
+  <div class="member-caption"><h3>{{ member.name }}</h3>@if (member.number !== null || member.position !== 'Chưa cập nhật') {<p>{{ member.number !== null ? '#' + member.number : '' }}{{ member.number !== null && member.position !== 'Chưa cập nhật' ? ' · ' : '' }}{{ member.position !== 'Chưa cập nhật' ? member.position : '' }}</p>}</div>
 </button>
-}</div><p class="data-note">Tên lấy từ ảnh đội cung cấp. Số áo và vị trí sẽ được cập nhật.</p></section>
+}</div><p class="data-note">{{ members.length }} anh em. Một màu áo. Một đam mê.</p></section>
 <section appReveal id="scorers" class="scoring section-wrap">
   <div class="section-heading"><div><span class="eyebrow">03 / GOAL SCORERS</span><h2>DẤU ẤN.<br/><em>GHI BÀN.</em></h2></div><p>Những người anh em tạo nên bàn thắng.<br/><span class="scoring-period">{{ scoring.label }}</span></p></div>
   <div class="scoring-layout">
@@ -59,13 +59,13 @@
     </tbody></table></div>
   </div>
 </section>
-    <section appReveal id="contact" class="contact section-wrap"><div class="contact-copy"><span class="eyebrow">04 / HẸN NHAU TRÊN SÂN</span><h2>THIẾU MỘT KÈO?<br/><em>CÓ TỤI MÌNH.</em></h2><p>Một trận bóng hay bắt đầu từ một lời hẹn.<br/>Rủ Chẹp Chẹp giao lưu nhé!</p><div class="contact-links">@for (label of ['Zalo', 'Facebook', 'Gọi điện']; track label) {<span>{{ label }} <small>Chưa cập nhật</small></span>}</div></div><form (submit)="submit($event)"><div class="form-title">Lời hẹn giao lưu <span>↗</span></div><label>Tên đội bóng<input name="team" required placeholder="Đội của bạn tên gì?" /></label><label>Trình độ<select name="level" required ><option value="" disabled selected>Chọn trình độ đội</option><option>Vui là chính</option><option>Phong trào</option><option>Bán chuyên</option></select></label><div class="form-row"><label>Sân dự kiến<input name="pitch" required placeholder="Tên sân / khu vực" /></label><label>Thời gian<input name="time" type="datetime-local" required /></label></div><label>Thông tin liên hệ<input name="contact" required placeholder="Số điện thoại hoặc Zalo" /></label><button class="button" type="submit">Xem trước lời hẹn <span>↗</span></button><p class="form-note" role="status">{{ submitted() ? 'Đã hoàn tất bản xem trước. Lời hẹn chưa được gửi hoặc lưu; chức năng gửi sẽ có khi kết nối backend.' : 'Form mẫu giao diện — chưa gửi hoặc lưu thông tin.' }}</p></form></section></main>
-    <footer><a class="footer-brand" href="#home">FC CHẸP CHẸP<span>ANH EM MỘT ĐỘI.</span></a><p>Địa điểm và thông tin liên hệ đang cập nhật.</p><span>Hẹn gặp trên sân ↗</span></footer><a class="sticky-contact button" href="#contact">Bắt đôi giao lưu <span>↗</span></a>
+    <section appReveal id="contact" class="contact section-wrap"><div class="contact-copy"><span class="eyebrow">04 / HẸN NHAU TRÊN SÂN</span><h2>THIẾU MỘT KÈO?<br/><em>CÓ TỤI MÌNH.</em></h2><p>Một trận bóng hay bắt đầu từ một lời hẹn.<br/>Rủ Chẹp Chẹp giao lưu nhé!</p><div class="contact-links">@for (label of ['Zalo', 'Facebook', 'Gọi điện']; track label) {<span>{{ label }} <small>Chưa cập nhật</small></span>}</div></div><form (submit)="submit($event)"><div class="form-title">Lời hẹn giao lưu <app-icon name="arrow-up-right" /></div><label>Tên đội bóng<input name="team" required placeholder="Đội của bạn tên gì?" /></label><label>Trình độ<select name="level" required ><option value="" disabled selected>Chọn trình độ đội</option><option>Vui là chính</option><option>Phong trào</option><option>Bán chuyên</option></select></label><div class="form-row"><label>Sân dự kiến<input name="pitch" required placeholder="Tên sân / khu vực" /></label><label>Thời gian<input name="time" type="datetime-local" required /></label></div><label>Thông tin liên hệ<input name="contact" required placeholder="Số điện thoại hoặc Zalo" /></label><button class="button" type="submit">Xem trước lời hẹn <app-icon name="arrow-up-right" /></button><p class="form-note" role="status">{{ submitted() ? 'Đã hoàn tất bản xem trước. Lời hẹn chưa được gửi hoặc lưu; chức năng gửi sẽ có khi kết nối backend.' : 'Form mẫu giao diện — chưa gửi hoặc lưu thông tin.' }}</p></form></section></main>
+    <footer><a class="footer-brand" href="#home">FC CHẸP CHẸP<span>ANH EM MỘT ĐỘI.</span></a><p>Địa điểm và thông tin liên hệ đang cập nhật.</p><a class="footer-contact" href="#contact">Hẹn gặp trên sân <app-icon name="arrow-up-right" /></a></footer>@if (showStickyContact()) {<a class="sticky-contact button" href="#contact">Bắt đôi giao lưu <app-icon name="arrow-up-right" /></a>}
 @if (selectedMember; as member) {
 <div class="lightbox" role="dialog" aria-modal="true" [attr.aria-label]="'Ảnh thành viên ' + member.name" (touchstart)="startTouch($event)" (touchend)="endTouch($event)">
-  <button #closeButton class="close" (click)="close()" aria-label="Đóng ảnh">✕</button>
+  <button #closeButton class="close" (click)="close()" aria-label="Đóng ảnh"><app-icon name="close" /></button>
   <img appPhoto [src]="member.image" [alt]="'Chân dung ' + member.name" loading="eager" />
-  <div class="lightbox-caption"><button (click)="change(-1)" aria-label="Thành viên trước">←</button><div><h2>{{ member.name }}</h2><p>{{ member.position }} · {{ (selected() ?? 0) + 1 }}/{{ members.length }}</p></div><button (click)="change(1)" aria-label="Thành viên tiếp theo">→</button></div>
+  <div class="lightbox-caption"><button (click)="change(-1)" aria-label="Thành viên trước"><app-icon name="arrow-left" /></button><div><h2>{{ member.name }}</h2><p>{{ member.position }} · {{ (selected() ?? 0) + 1 }}/{{ members.length }}</p></div><button (click)="change(1)" aria-label="Thành viên tiếp theo"><app-icon name="arrow-right" /></button></div>
   <p class="swipe-hint">Vuốt ngang để đổi ảnh · Vuốt xuống để đóng</p>
 </div>
 }
