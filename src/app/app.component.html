@@ -38,7 +38,28 @@
   <div class="member-caption"><h3>{{ member.name }}</h3><p>{{ member.number !== null ? '#' + member.number + ' · ' : '' }}{{ member.position }}</p></div>
 </button>
 }</div><p class="data-note">Tên lấy từ ảnh đội cung cấp. Số áo và vị trí sẽ được cập nhật.</p></section>
-    <section appReveal id="contact" class="contact section-wrap"><div class="contact-copy"><span class="eyebrow">03 / HẸN NHAU TRÊN SÂN</span><h2>THIẾU MỘT KÈO?<br/><em>CÓ TỤI MÌNH.</em></h2><p>Một trận bóng hay bắt đầu từ một lời hẹn.<br/>Rủ Chẹp Chẹp giao lưu nhé!</p><div class="contact-links">@for (label of ['Zalo', 'Facebook', 'Gọi điện']; track label) {<span>{{ label }} <small>Chưa cập nhật</small></span>}</div></div><form (submit)="submit($event)"><div class="form-title">Lời hẹn giao lưu <span>↗</span></div><label>Tên đội bóng<input name="team" required placeholder="Đội của bạn tên gì?" /></label><label>Trình độ<select name="level" required ><option value="" disabled selected>Chọn trình độ đội</option><option>Vui là chính</option><option>Phong trào</option><option>Bán chuyên</option></select></label><div class="form-row"><label>Sân dự kiến<input name="pitch" required placeholder="Tên sân / khu vực" /></label><label>Thời gian<input name="time" type="datetime-local" required /></label></div><label>Thông tin liên hệ<input name="contact" required placeholder="Số điện thoại hoặc Zalo" /></label><button class="button" type="submit">Xem trước lời hẹn <span>↗</span></button><p class="form-note" role="status">{{ submitted() ? 'Đã hoàn tất bản xem trước. Lời hẹn chưa được gửi hoặc lưu; chức năng gửi sẽ có khi kết nối backend.' : 'Form mẫu giao diện — chưa gửi hoặc lưu thông tin.' }}</p></form></section></main>
+<section appReveal id="scorers" class="scoring section-wrap">
+  <div class="section-heading"><div><span class="eyebrow">03 / GOAL SCORERS</span><h2>DẤU ẤN.<br/><em>GHI BÀN.</em></h2></div><p>Những người anh em tạo nên bàn thắng.<br/><span class="scoring-period">{{ scoring.label }}</span></p></div>
+  <div class="scoring-layout">
+    <div class="scoring-summary">
+      <div class="top-scorer"><span class="eyebrow">DẪN ĐẦU BẢNG GHI BÀN</span><span class="scorer-backdrop" aria-hidden="true">{{ topScorer.goals }}</span>
+        @if (topScorer.image) {<img appPhoto [src]="topScorer.image" [alt]="'Cầu thủ ghi nhiều bàn nhất: ' + topScorer.name" loading="lazy" />}
+        <div class="top-scorer-caption"><h3>{{ topScorer.name }}</h3><span>{{ topScorer.goals }} BÀN THẮNG</span></div>
+      </div>
+      <div class="scoring-totals"><div><strong>{{ totalGoals }}</strong><span>BÀN TRONG BẢNG</span></div><div><strong>{{ scorers.length }}</strong><span>CẦU THỦ</span></div></div>
+    </div>
+    <div class="scorers-table-wrap"><table class="scorers-table"><caption>Bảng ghi bàn — {{ scoring.label }}</caption><thead><tr><th scope="col">STT</th><th scope="col">Cầu thủ</th><th scope="col">Bàn</th></tr></thead><tbody>
+    @for (player of scorers; track player.id; let index = $index) {
+      <tr [class.leading-scorer]="index === 0"><td class="scorer-order">{{ (index + 1).toString().padStart(2, '0') }}</td><th scope="row"><div class="scorer-player">
+        @if (player.image) {<img appPhoto [src]="player.image" [alt]="'Ảnh ' + player.name" loading="lazy" />}
+        @else {<span class="scorer-initial" aria-hidden="true">{{ player.name.slice(0, 2).toUpperCase() }}</span>}
+        <span>{{ player.name }}</span>
+      </div></th><td class="scorer-goals"><strong>{{ player.goals }}</strong><span class="goal-track" aria-hidden="true"><span [style.transform]="'scaleX(' + player.goals / topScorer.goals + ')'" ></span></span></td></tr>
+    }
+    </tbody></table></div>
+  </div>
+</section>
+    <section appReveal id="contact" class="contact section-wrap"><div class="contact-copy"><span class="eyebrow">04 / HẸN NHAU TRÊN SÂN</span><h2>THIẾU MỘT KÈO?<br/><em>CÓ TỤI MÌNH.</em></h2><p>Một trận bóng hay bắt đầu từ một lời hẹn.<br/>Rủ Chẹp Chẹp giao lưu nhé!</p><div class="contact-links">@for (label of ['Zalo', 'Facebook', 'Gọi điện']; track label) {<span>{{ label }} <small>Chưa cập nhật</small></span>}</div></div><form (submit)="submit($event)"><div class="form-title">Lời hẹn giao lưu <span>↗</span></div><label>Tên đội bóng<input name="team" required placeholder="Đội của bạn tên gì?" /></label><label>Trình độ<select name="level" required ><option value="" disabled selected>Chọn trình độ đội</option><option>Vui là chính</option><option>Phong trào</option><option>Bán chuyên</option></select></label><div class="form-row"><label>Sân dự kiến<input name="pitch" required placeholder="Tên sân / khu vực" /></label><label>Thời gian<input name="time" type="datetime-local" required /></label></div><label>Thông tin liên hệ<input name="contact" required placeholder="Số điện thoại hoặc Zalo" /></label><button class="button" type="submit">Xem trước lời hẹn <span>↗</span></button><p class="form-note" role="status">{{ submitted() ? 'Đã hoàn tất bản xem trước. Lời hẹn chưa được gửi hoặc lưu; chức năng gửi sẽ có khi kết nối backend.' : 'Form mẫu giao diện — chưa gửi hoặc lưu thông tin.' }}</p></form></section></main>
     <footer><a class="footer-brand" href="#home">FC CHẸP CHẸP<span>ANH EM MỘT ĐỘI.</span></a><p>Địa điểm và thông tin liên hệ đang cập nhật.</p><span>Hẹn gặp trên sân ↗</span></footer><a class="sticky-contact button" href="#contact">Bắt đôi giao lưu <span>↗</span></a>
 @if (selectedMember; as member) {
 <div class="lightbox" role="dialog" aria-modal="true" [attr.aria-label]="'Ảnh thành viên ' + member.name" (touchstart)="startTouch($event)" (touchend)="endTouch($event)">

@@ -1,0 +1,77 @@
+{
+  "label": "Trận 6",
+  "players": [
+    {
+      "id": "sut",
+      "name": "Sứt",
+      "goals": 9,
+      "memberId": "sut"
+    },
+    {
+      "id": "trinh",
+      "name": "Trình",
+      "goals": 4,
+      "memberId": "trinh"
+    },
+    {
+      "id": "silun",
+      "name": "Silun",
+      "goals": 4,
+      "memberId": "silun"
+    },
+    {
+      "id": "liem",
+      "name": "Cụ",
+      "goals": 3,
+      "memberId": "liem"
+    },
+    {
+      "id": "hadinggg",
+      "name": "Hadinggg",
+      "goals": 3,
+      "memberId": null
+    },
+    {
+      "id": "bayco",
+      "name": "Bayco",
+      "goals": 2,
+      "memberId": "bayco"
+    },
+    {
+      "id": "chep",
+      "name": "Chep",
+      "goals": 1,
+      "memberId": "chep"
+    },
+    {
+      "id": "to",
+      "name": "To",
+      "goals": 1,
+      "memberId": "to"
+    },
+    {
+      "id": "liu",
+      "name": "Lìu",
+      "goals": 0,
+      "memberId": "liu"
+    },
+    {
+      "id": "clay",
+      "name": "Clay",
+      "goals": 0,
+      "memberId": "clay"
+    },
+    {
+      "id": "coc",
+      "name": "Cốc",
+      "goals": 0,
+      "memberId": "coc"
+    },
+    {
+      "id": "voi",
+      "name": "Voi",
+      "goals": 0,
+      "memberId": "voi"
+    }
+  ]
+}

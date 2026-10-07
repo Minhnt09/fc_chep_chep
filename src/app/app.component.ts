@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
-import { getMembers } from '../services/content';
+import { getMembers, getScorers } from '../services/content';
 import { PhotoDirective } from './photo.directive';
 import { RevealDirective } from './reveal.directive';
 
@@ -10,6 +10,12 @@ import { RevealDirective } from './reveal.directive';
 })
 export class AppComponent implements OnInit, OnDestroy {
   readonly members = getMembers();
+  readonly scoring = getScorers();
+  readonly scorers = [...this.scoring.players].sort((a, b) => b.goals - a.goals).map(player => ({
+    ...player, image: this.members.find(member => member.id === player.memberId)?.image,
+  }));
+  readonly totalGoals = this.scorers.reduce((total, player) => total + player.goals, 0);
+  readonly topScorer = this.scorers[0];
   readonly selected = signal<number | null>(null);
   readonly submitted = signal(false);
   readonly featured = signal(1);

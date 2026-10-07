@@ -78,5 +78,21 @@
     "number": null,
     "position": "Chưa cập nhật",
     "image": "/images/members/voi.webp"
+  },
+  {
+    "id": "silun",
+    "name": "DUY",
+    "nickname": "SILUN",
+    "number": null,
+    "position": "Chưa cập nhật",
+    "image": "/images/members/silun.webp"
+  },
+  {
+    "id": "domixi",
+    "name": "DM",
+    "nickname": "DOMIXI",
+    "number": null,
+    "position": "Chưa cập nhật",
+    "image": "/images/members/domixi.webp"
   }
 ]
