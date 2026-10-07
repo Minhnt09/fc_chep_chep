@@ -42,7 +42,9 @@ Logo và texture giấy được trích từ video tham chiếu đội cung cấ
 - `src/styles.css`: giao diện responsive và Tailwind.
 - `src/services/content.ts`: lớp đọc dữ liệu; thay nguồn tại đây khi nối Supabase.
 - `src/data/members.json`: cập nhật `name`, `nickname`, `number`, `position`, `image`; số áo chưa rõ dùng `null`.
-- `src/data/matches.json`, `src/data/stats.json`: khung dữ liệu chờ bước tiếp theo; giá trị 0 hiện chưa hiển thị trên giao diện.
+- `src/data/matches.json`: 10 kết quả trận đấu, đối thủ, logo, người ghi bàn và bài nguồn Instagram.
+- `src/data/news.json`: ảnh và nội dung tin tức của đội.
+- `src/data/stats.json`: khung thống kê tổng quát chưa hiển thị.
 - `public/images/`: ảnh WebP đã tối ưu từ `img/`. Thư mục `img/` giữ nguyên ảnh gốc.
 - `public/images/design/`: logo và texture trích từ video tham chiếu.
 - `markdown/video-design-reference.md`: phân tích video và hướng thiết kế áp dụng.
@@ -68,3 +70,9 @@ Sau khi đẩy lên GitHub: vào Vercel → Add New → Project → Import repos
 ## Icon và kiểm tra mobile
 
 `src/app/icon.component.ts` cung cấp icon SVG dùng chung, không sử dụng ký tự emoji cho nút điều khiển. Xem kết quả rà giao diện tại `markdown/mobile-ui-review.md`.
+
+## Lịch sử trận đấu và tin tức
+
+Lịch sử nhóm theo tháng, có bộ lọc kết quả và tháng. Chạm thẻ trận để mở người ghi bàn, ảnh kết quả và bài Instagram gốc. Logo và ảnh tối ưu lưu tại `public/images/opponents/`, `public/images/matches/`; ảnh tin tại `public/images/articles/`. Ảnh gốc `history/` và `news/` được giữ trên máy, không đưa vào Git.
+
+`postedAt` là ngày đăng bài đã đối chiếu. Khi xác nhận ngày thi đấu, điền `date` dạng `YYYY-MM-DD`, đặt `dateVerified` thành `true`; giao diện tự dùng ngày đó và bỏ nhãn “Ngày đăng” ở trận tương ứng. Xem bảng nguồn trong `markdown/match-history-sources.md`. Tin Clay hiện chưa có ngày xuất bản được cung cấp.

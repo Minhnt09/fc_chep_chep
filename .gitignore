@@ -11,3 +11,7 @@ img/
 video/
 .vercel/
 *.log
+
+# Ảnh nguồn lịch sử và tin tức được tối ưu riêng trong public/images/.
+/history/
+/news/

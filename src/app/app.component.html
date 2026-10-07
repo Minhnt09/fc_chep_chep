@@ -59,7 +59,39 @@
     </tbody></table></div>
   </div>
 </section>
-    <section appReveal id="contact" class="contact section-wrap"><div class="contact-copy"><span class="eyebrow">04 / HẸN NHAU TRÊN SÂN</span><h2>THIẾU MỘT KÈO?<br/><em>CÓ TỤI MÌNH.</em></h2><p>Một trận bóng hay bắt đầu từ một lời hẹn.<br/>Rủ Chẹp Chẹp giao lưu nhé!</p><div class="contact-links">
+<section appReveal id="history" class="match-history section-wrap">
+  <div class="section-heading"><div><span class="eyebrow">04 / MATCH RESULTS</span><h2>SAU TIẾNG CÒI.<br/><em>CÒN CÂU CHUYỆN.</em></h2></div><p>{{ matchCounts.all }} trận đấu.<br/>{{ matchCounts.win }} chiến thắng cùng những người anh em.</p></div>
+  <div class="history-toolbar">
+    <div class="history-filters" role="group" aria-label="Lọc kết quả trận đấu">@for (filter of historyFilters; track filter.id) {<button [class.active]="historyResult() === filter.id" [attr.aria-pressed]="historyResult() === filter.id" (click)="historyResult.set(filter.id)">{{ filter.label }} <span>{{ filter.count }}</span></button>}</div>
+    <label class="history-month">Theo tháng<select aria-label="Lọc tháng lịch sử trận đấu" [value]="historyMonth()" (change)="setHistoryMonth($event)"><option value="all">Tất cả tháng</option>@for (month of historyMonths; track month) {<option [value]="month">{{ formatMonth(month) }}</option>}</select></label>
+  </div>
+  @if (hasUnverifiedMatchDates) {<p class="history-date-note">Ngày hiển thị là ngày đăng bài kết quả trên Instagram. Ngày thi đấu chưa được xác nhận.</p>}
+  @for (group of historyGroups(); track group.month) {
+    <div class="history-group"><h3 class="history-group-title">{{ formatMonth(group.month) }} <span>{{ group.matches.length }} TRẬN</span></h3>
+      <div class="match-grid">@for (match of group.matches; track match.id) {
+        <details class="match-card"><summary [attr.aria-label]="'Xem chi tiết FC Chẹp Chẹp ' + match.scoreFor + ' – ' + match.scoreAgainst + ' ' + match.opponent">
+          <div class="match-meta"><span><time [attr.datetime]="match.displayDate">{{ formatDate(match.displayDate) }}</time>{{ !match.dateVerified ? ' · Ngày đăng' : '' }}</span><span class="match-result" [class.match-loss]="match.result === 'loss'">{{ resultLabel(match.result) }}</span></div>
+          <div class="match-scoreboard"><div class="match-teams">
+            <div class="match-team" [class.match-winner]="match.scoreFor > match.scoreAgainst"><img src="/images/opponents/chepchep.webp" alt="Logo FC Chẹp Chẹp" loading="lazy" width="32" height="32" /><span>FC Chẹp Chẹp</span><strong>{{ match.scoreFor }}</strong></div>
+            <div class="match-team" [class.match-winner]="match.scoreAgainst > match.scoreFor"><img [src]="match.opponentLogo" [alt]="'Logo ' + match.opponent" loading="lazy" width="32" height="32" /><span>{{ match.opponent }}</span><strong>{{ match.scoreAgainst }}</strong></div>
+          </div><div class="match-status"><span>KT</span><small>Đã kết thúc</small></div></div>
+          <div class="match-expand"><span>CHI TIẾT TRẬN ĐẤU</span><app-icon name="arrow-down" /></div>
+        </summary><div class="match-detail">
+          <div class="match-scorers"><h4>Ghi bàn · FC Chẹp Chẹp</h4><ul>@for (scorer of match.scorers; track scorer.name) {<li><span>{{ scorer.name }}</span><strong>{{ scorer.goals }} bàn</strong></li>}</ul></div>
+          <a class="match-source" [href]="match.sourceUrl" target="_blank" rel="noopener noreferrer">Bài kết quả trên Instagram <app-icon name="arrow-up-right" /></a>
+          <img appPhoto class="match-poster" [src]="match.poster" [alt]="'Ảnh kết quả FC Chẹp Chẹp ' + match.scoreFor + ' – ' + match.scoreAgainst + ' ' + match.opponent" loading="lazy" />
+        </div></details>
+      }</div>
+    </div>
+  } @empty {<div class="history-empty"><p>Chưa có trận đấu phù hợp với bộ lọc này.</p><button class="text-button" (click)="historyResult.set('all'); historyMonth.set('all')">Xem tất cả trận đấu <app-icon name="arrow-right" /></button></div>}
+</section>
+<section appReveal id="news" class="club-news section-wrap">
+  <div class="section-heading"><div><span class="eyebrow">05 / CLUB NEWS</span><h2>CHUYỆN ĐỘI.<br/><em>CHẸP CHẸP.</em></h2></div><p>Cùng nhau trên sân.<br/>Sát cánh cả ngoài đời.</p></div>
+  @for (article of news; track article.id) {
+    <article class="news-article"><div class="news-photo"><img appPhoto [src]="article.image" [alt]="article.alt" loading="lazy" /></div><div class="news-content"><span class="news-category">{{ article.category }}</span><h3>{{ article.title }}</h3>@for (paragraph of article.paragraphs; track $index) {<p>{{ paragraph }}</p>}</div></article>
+  }
+</section>
+    <section appReveal id="contact" class="contact section-wrap"><div class="contact-copy"><span class="eyebrow">06 / HẸN NHAU TRÊN SÂN</span><h2>THIẾU MỘT KÈO?<br/><em>CÓ TỤI MÌNH.</em></h2><p>Một trận bóng hay bắt đầu từ một lời hẹn.<br/>Rủ Chẹp Chẹp giao lưu nhé!</p><div class="contact-links">
   <a class="contact-link" href="https://www.instagram.com/chepchepfc/" target="_blank" rel="noopener noreferrer" aria-label="Instagram FC Chẹp Chẹp (mở tab mới)">
     <span class="contact-link-heading"><app-icon name="instagram" /> Instagram</span><span class="contact-link-value">&#64;chepchepfc</span>
   </a>

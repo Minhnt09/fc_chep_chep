@@ -1,3 +1,4 @@
+import news from '../data/news.json';
 import scorers from '../data/scorers.json';
 import members from '../data/members.json';
 import matches from '../data/matches.json';
@@ -8,3 +9,5 @@ export const getMatches = () => matches;
 export const getStats = () => stats;
 
 export const getScorers = () => scorers;
+
+export const getNews = () => news;

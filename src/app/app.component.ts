@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
-import { getMembers, getScorers } from '../services/content';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, computed, signal, ViewChild } from '@angular/core';
+import { getMembers, getScorers, getMatches, getNews } from '../services/content';
 import { IconComponent } from './icon.component';
 import { PhotoDirective } from './photo.directive';
 import { RevealDirective } from './reveal.directive';
@@ -11,6 +11,41 @@ import { RevealDirective } from './reveal.directive';
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly members = getMembers();
+  readonly news = getNews();
+  readonly historyMatches = getMatches().map(match => ({
+    ...match,
+    displayDate: match.date ?? match.postedAt,
+    result: match.scoreFor > match.scoreAgainst ? 'win' : match.scoreFor < match.scoreAgainst ? 'loss' : 'draw',
+  })).sort((a, b) => b.displayDate.localeCompare(a.displayDate));
+  readonly historyResult = signal('all');
+  readonly historyMonth = signal('all');
+  readonly matchCounts = {
+    all: this.historyMatches.length,
+    win: this.historyMatches.filter(match => match.result === 'win').length,
+    draw: this.historyMatches.filter(match => match.result === 'draw').length,
+    loss: this.historyMatches.filter(match => match.result === 'loss').length,
+  };
+  readonly historyFilters = [
+    { id: 'all', label: 'Tất cả', count: this.matchCounts.all },
+    { id: 'win', label: 'Thắng', count: this.matchCounts.win },
+    { id: 'draw', label: 'Hòa', count: this.matchCounts.draw },
+    { id: 'loss', label: 'Thua', count: this.matchCounts.loss },
+  ];
+  readonly historyMonths = [...new Set(this.historyMatches.map(match => match.displayDate.slice(0, 7)))];
+  readonly historyGroups = computed(() => {
+    const filtered = this.historyMatches.filter(match =>
+      (this.historyResult() === 'all' || match.result === this.historyResult()) &&
+      (this.historyMonth() === 'all' || match.displayDate.startsWith(this.historyMonth())));
+    return [...new Set(filtered.map(match => match.displayDate.slice(0, 7)))].map(month => ({
+      month, matches: filtered.filter(match => match.displayDate.startsWith(month)),
+    }));
+  });
+  readonly hasUnverifiedMatchDates = this.historyMatches.some(match => !match.dateVerified);
+  setHistoryMonth(event: Event) { this.historyMonth.set((event.target as HTMLSelectElement).value); }
+  formatMonth(month: string) { const [year, number] = month.split('-'); return `Tháng ${Number(number)} / ${year}`; }
+  formatDate(date: string) { return date.split('-').reverse().join('/'); }
+  resultLabel(result: string) { return result === 'win' ? 'Thắng' : result === 'loss' ? 'Thua' : 'Hòa'; }
+
   readonly scoring = getScorers();
   readonly scorers = [...this.scoring.players].sort((a, b) => b.goals - a.goals).map(player => ({
     ...player, image: this.members.find(member => member.id === player.memberId)?.image,
@@ -31,7 +66,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       // Hero đã có CTA; không che controls giới thiệu hoặc form liên hệ.
       this.showStickyContact.set(visible.size === 0);
     }, { rootMargin: '0px 0px -72px 0px' });
-    for (const id of ['home', 'spotlight', 'contact']) {
+    for (const id of ['home', 'spotlight', 'news', 'contact']) {
       const section = document.getElementById(id);
       if (section) this.contactObserver.observe(section);
     }
