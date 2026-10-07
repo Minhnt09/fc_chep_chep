@@ -26,7 +26,7 @@ Build production nằm trong `dist/fc-chep-chep/browser`. `preview` chạy Angul
 
 - Hero dùng ảnh cả đội, nền giấy/grunge, chữ lớn và tông trắng ngà–vàng–đen theo video giới thiệu.
 - Khung giới thiệu cầu thủ dạng poster, tự đổi mỗi 2 giây, đổi hướng bằng nút hoặc vuốt ngang, có nút tạm dừng; chuyển cảnh bằng transform/opacity.
-- Lưới 12 thành viên, 2 cột trên điện thoại; lightbox có nút đóng, phím Escape, phím mũi tên, vuốt ngang và vuốt xuống.
+- Lưới 13 thành viên, 2 cột trên điện thoại; lightbox có nút đóng, phím Escape, phím mũi tên, vuốt ngang và vuốt xuống.
 - Form liên hệ chỉ xem trước, chưa lưu/gửi dữ liệu. Thông tin Zalo, Facebook và điện thoại chờ cập nhật.
 - Hiệu ứng xuất hiện khi cuộn và hỗ trợ giảm chuyển động.
 
@@ -65,7 +65,7 @@ Sau khi đẩy lên GitHub: vào Vercel → Add New → Project → Import repos
 
 ## Thống kê ghi bàn
 
-`src/data/scorers.json` chứa bảng **Trận 6** theo ảnh người dùng cung cấp (12 cầu thủ, 27 bàn). Cập nhật `label`, `name`, `goals`, `memberId` tại đây; giao diện tự sắp xếp giảm dần và cộng tổng. `memberId` liên kết ảnh thành viên; Silun đã được nối ảnh từ `img/silun/DUY.png`. Ảnh `img/domixi/DM.png` đã thêm vào đội hình với tên DM và biệt danh DOMIXI; Người dùng đã xác nhận DM/Domixi là cầu thủ khác Hadinggg. Hadinggg tiếp tục dùng chữ viết tắt vì chưa có ảnh; thống kê Domixi chưa được cung cấp. Không diễn giải bảng này thành tổng cả mùa hoặc thống kê 6 trận.
+`src/data/scorers.json` chứa bảng **Trận 6** theo ảnh người dùng cung cấp (12 cầu thủ, 27 bàn). Cập nhật `label`, `name`, `goals`, `memberId` tại đây; giao diện tự sắp xếp giảm dần và cộng tổng. `memberId` liên kết ảnh thành viên; Silun đã được nối ảnh từ `img/silun/DUY.png`. Ảnh `img/domixi/DM.png` đã thêm vào đội hình với tên DM và biệt danh DOMIXI; Người dùng đã xác nhận DM/Domixi là cầu thủ khác Hadinggg. Hadinggg đã có ảnh đại diện từ `img/hadinggg/images.jpeg` và được nối với bảng ghi bàn; thống kê Domixi chưa được cung cấp. Không diễn giải bảng này thành tổng cả mùa hoặc thống kê 6 trận.
 
 ## Icon và kiểm tra mobile
 
