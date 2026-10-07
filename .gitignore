@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+.angular/
+out-tsc/
+
+# Tài nguyên gốc dùng làm tham chiếu; website dùng ảnh tối ưu trong public/.
+img/
+video/
+.vercel/
+*.log

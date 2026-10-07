@@ -1,0 +1,82 @@
+[
+  {
+    "id": "bayco",
+    "name": "THẦY",
+    "nickname": "THẦY",
+    "number": null,
+    "position": "Chưa cập nhật",
+    "image": "/images/members/bayco.webp"
+  },
+  {
+    "id": "chep",
+    "name": "CHẸP",
+    "nickname": "CHẸP",
+    "number": null,
+    "position": "Chưa cập nhật",
+    "image": "/images/members/chep.webp"
+  },
+  {
+    "id": "clay",
+    "name": "CLAY",
+    "nickname": "CLAY",
+    "number": null,
+    "position": "Chưa cập nhật",
+    "image": "/images/members/clay.webp"
+  },
+  {
+    "id": "coc",
+    "name": "CỐC",
+    "nickname": "CỐC",
+    "number": null,
+    "position": "Chưa cập nhật",
+    "image": "/images/members/coc.webp"
+  },
+  {
+    "id": "liem",
+    "name": "CỤ",
+    "nickname": "CỤ",
+    "number": null,
+    "position": "Chưa cập nhật",
+    "image": "/images/members/liem.webp"
+  },
+  {
+    "id": "liu",
+    "name": "Lìu",
+    "nickname": "Lìu",
+    "number": null,
+    "position": "Chưa cập nhật",
+    "image": "/images/members/liu.webp"
+  },
+  {
+    "id": "sut",
+    "name": "SỨT",
+    "nickname": "SỨT",
+    "number": null,
+    "position": "Chưa cập nhật",
+    "image": "/images/members/sut.webp"
+  },
+  {
+    "id": "to",
+    "name": "TO",
+    "nickname": "TO",
+    "number": null,
+    "position": "Chưa cập nhật",
+    "image": "/images/members/to.webp"
+  },
+  {
+    "id": "trinh",
+    "name": "TRÌNH",
+    "nickname": "TRÌNH",
+    "number": null,
+    "position": "Chưa cập nhật",
+    "image": "/images/members/trinh.webp"
+  },
+  {
+    "id": "voi",
+    "name": "VOI",
+    "nickname": "VOI",
+    "number": null,
+    "position": "Chưa cập nhật",
+    "image": "/images/members/voi.webp"
+  }
+]
