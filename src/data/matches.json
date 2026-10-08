@@ -298,5 +298,24 @@
     "sourceUrl": "https://www.instagram.com/p/DeKYZj4Ejwu/",
     "sourceFile": "history/igexport-DeKYZj4Ejwu.jpg",
     "dateVerified": false
+  },
+  {
+    "id": "2026-10-08-haisan-hadong",
+    "date": "2026-10-08",
+    "postedAt": null,
+    "kickoff": "2026-10-08T19:30:00+07:00",
+    "time": "19:30",
+    "venue": null,
+    "opponent": "Hải sản Hà Đông",
+    "opponentLogo": "/images/opponents/haisan-hadong.webp",
+    "scoreFor": null,
+    "scoreAgainst": null,
+    "status": "upcoming",
+    "scorers": [],
+    "poster": "/images/matches/2026-10-08-haisan-hadong.webp",
+    "sourceUrl": "https://www.instagram.com/chepchepfc/",
+    "sourceIsProfile": true,
+    "sourceFile": "history/2026_10_08_19:30.jpg",
+    "dateVerified": true
   }
 ]

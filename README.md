@@ -100,6 +100,8 @@ Test database chạy trên container riêng và tự dọn, không sửa Supabas
 
 ## Lịch sử trận đấu và tin tức
 
+Khối lịch thi đấu hiển thị các trận `status: upcoming` trước lịch sử, hiện có trận Hải sản Hà Đông lúc 19:30 ngày 08/10/2026. Tỷ số để `null`, không tính vào thống kê đã đá; giờ có múi giờ Việt Nam. Khi có kết quả, chuyển sang `played`, điền tỷ số/người ghi bàn và link bài nguồn.
+
 Lịch sử nhóm theo tháng, có bộ lọc kết quả và tháng. Chạm thẻ trận để mở người ghi bàn, ảnh kết quả và bài Instagram gốc. Logo và ảnh tối ưu lưu tại `public/images/opponents/`, `public/images/matches/`; ảnh tin tại `public/images/articles/`. Ảnh gốc `history/` và `news/` được giữ trên máy, không đưa vào Git.
 
 `postedAt` là ngày đăng bài đã đối chiếu. Khi xác nhận ngày thi đấu, điền `date` dạng `YYYY-MM-DD`, đặt `dateVerified` thành `true`; giao diện tự dùng ngày đó và bỏ nhãn “Ngày đăng” ở trận tương ứng. Xem bảng nguồn trong `markdown/match-history-sources.md`. Tin Clay hiện chưa có ngày xuất bản được cung cấp.

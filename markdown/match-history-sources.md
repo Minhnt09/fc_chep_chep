@@ -22,3 +22,11 @@ Trận với XD đặt logo XD bên trái trên ảnh gốc (8–2), vì vậy t
 Tin Clay dùng ảnh `news/tin-tuc.jpg` và nội dung người dùng cung cấp. Không tự thêm ngày xuất bản hoặc dự đoán ngày hồi phục.
 
 Kiểm tra: tổng bàn do danh sách người ghi bàn ghi nhận bằng tỷ số đội trong cả 10 trận; ảnh/logo tồn tại. Lọc tháng, kết quả, trạng thái trống và mở chi tiết đã được kiểm tra trên trình duyệt.
+
+## Lịch thi đấu 08/10/2026
+
+- Poster nguồn: `history/2026_10_08_19:30.jpg`. Poster ghi “7:30PM - THU 08 OCT”; năm 2026 theo tên file người dùng cung cấp, khớp thứ Năm 08/10/2026.
+- Đối thủ **Hải sản Hà Đông** do người dùng xác nhận. Logo cá xanh/cam cắt từ bên trái poster; logo vàng bên phải khớp logo FC Chẹp Chẹp hiện có.
+- Giờ đá: **19:30, 08/10/2026**, múi giờ Việt Nam (`+07:00`). Sân chưa được cung cấp, không tự suy đoán.
+- Người dùng cho biết poster đã đăng Instagram. Truy cập profile chưa lấy được nội dung bài cụ thể; hiện gắn link trang `https://www.instagram.com/chepchepfc/` với nhãn “Theo dõi trên Instagram của đội”, không coi đó là link bài đã đối chiếu.
+- Dữ liệu lưu trong matches.json, status `upcoming`, tỷ số `null`; khối lịch hiển thị trước lịch sử và không tính vào thống kê 10 trận đã đá. Khi có kết quả, đổi status thành `played`, điền tỷ số/người ghi bàn và link bài kết quả.

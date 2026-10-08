@@ -33,9 +33,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   readonly news = getNews();
-  readonly historyMatches = getMatches().map(match => ({
+  readonly upcomingMatches = getMatches().filter(match => match.status === 'upcoming')
+    .map(match => ({ ...match, displayDate: match.date ?? '', venue: match.venue as string | null }))
+    .sort((a, b) => (a.kickoff ?? a.displayDate).localeCompare(b.kickoff ?? b.displayDate));
+  readonly historyMatches = getMatches().filter((match): match is typeof match & { scoreFor: number; scoreAgainst: number } =>
+    match.status === 'played' && typeof match.scoreFor === 'number' && typeof match.scoreAgainst === 'number'
+    && (typeof match.date === 'string' || typeof match.postedAt === 'string')).map(match => ({
     ...match,
-    displayDate: match.date ?? match.postedAt,
+    displayDate: match.date ?? match.postedAt ?? '',
     result: match.scoreFor > match.scoreAgainst ? 'win' : match.scoreFor < match.scoreAgainst ? 'loss' : 'draw',
   })).sort((a, b) => b.displayDate.localeCompare(a.displayDate));
   readonly historyResult = signal('all');
@@ -84,13 +89,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         if (entry.isIntersecting) visible.add(entry.target.id);
         else visible.delete(entry.target.id);
       }
-      // Hero đã có CTA; không che controls giới thiệu hoặc form liên hệ.
+      // Hero đã có CTA; không che controls, lịch thi đấu hoặc form liên hệ.
       this.showStickyContact.set(visible.size === 0);
     }, { rootMargin: '0px 0px -72px 0px' });
     for (const id of ['home', 'spotlight', 'news', 'contact']) {
       const section = document.getElementById(id);
       if (section) this.contactObserver.observe(section);
     }
+    document.querySelectorAll('.fixture-panel').forEach(fixture => this.contactObserver!.observe(fixture));
   }
 
   readonly submitted = signal(false);
