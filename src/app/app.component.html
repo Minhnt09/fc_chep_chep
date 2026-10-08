@@ -10,6 +10,40 @@
   <div class="team-visual"><img appPhoto src="/images/team.webp" alt="Đội hình FC Chẹp Chẹp trong áo đấu trắng vàng cùng nâng cúp" loading="eager" /></div>
   <div class="hero-bottom"><span>CHUNG MÀU ÁO.<br/>CHUNG ĐAM MÊ.</span><a class="button" href="#contact">BẮT ĐÔI GIAO LƯU <app-icon name="arrow-up-right" /></a><a class="discover" href="#spotlight">GẶP ANH EM <app-icon name="arrow-down" /></a></div>
 </section>
+<section id="upcoming" class="upcoming-section section-wrap" aria-labelledby="upcoming-title">
+  <div class="section-heading"><div><span class="eyebrow">HẸN NHAU TRÊN SÂN</span><h2 id="upcoming-title">TRẬN SẮP TỚI.</h2></div></div>
+  @if (nextMatch(); as match) {
+    <article class="upcoming-card">
+      <span class="fixture-label">Sắp diễn ra</span>
+      <h3 class="upcoming-teams">
+        <span class="upcoming-team"><img src="/images/opponents/chepchep.webp" alt="Logo FC Chẹp Chẹp" width="64" height="64" /><span>FC Chẹp Chẹp</span></span>
+        <span class="upcoming-versus" aria-label="gặp">VS</span>
+        <span class="upcoming-team"><img [src]="match.opponentLogo" [alt]="'Logo ' + match.opponent" width="64" height="64" /><span>{{ match.opponent }}</span></span>
+      </h3>
+      <p><time [attr.datetime]="match.kickoff">{{ match.displayTime }} · {{ formatDate(match.displayDate) }} · Giờ Việt Nam</time></p>
+      <p>Sân thi đấu: {{ match.venue || 'Chưa cập nhật' }}</p>
+      @if (match.notes) {<p>{{ match.notes }}</p>}
+      @if (countdown(); as remaining) {
+        <div class="match-countdown" role="timer" aria-label="Thời gian còn lại đến giờ đá" aria-live="off">
+          <div><strong>{{ remaining.days }}</strong><span>Ngày</span></div>
+          <div><strong>{{ remaining.hours.toString().padStart(2, '0') }}</strong><span>Giờ</span></div>
+          <div><strong>{{ remaining.minutes.toString().padStart(2, '0') }}</strong><span>Phút</span></div>
+          <div><strong>{{ remaining.seconds.toString().padStart(2, '0') }}</strong><span>Giây</span></div>
+        </div>
+      }
+    </article>
+  } @else {
+    <div class="history-empty upcoming-empty">
+      @if (matchPreferences.lookingForMatch) {
+        <span class="fixture-label">Đang tìm kèo</span>
+        @if (matchPreferences.level) {<p>Trình độ: {{ matchPreferences.level }}</p>}
+        @if (matchPreferences.preferredTime) {<p>Khung giờ thường đá: {{ matchPreferences.preferredTime }}</p>}
+      }
+      <p>Hiện chúng tôi chưa có kèo, bạn có thể giao lưu với chúng tôi bằng cách</p>
+      <a class="button" href="#contact">Liên hệ giao lưu <app-icon name="arrow-up-right" /></a>
+    </div>
+  }
+</section>
 <app-team-interactions />
 <div class="team-strip" aria-hidden="true"><span>CHẸP CHẸP FC</span><i class="strip-divider"></i><span>ANH EM MỘT ĐỘI</span><i class="strip-divider"></i><span>RA SÂN HẾT MÌNH</span><i class="strip-divider"></i><span>CHẸP CHẸP FC</span></div>
 <section appReveal id="spotlight" class="spotlight section-wrap">
@@ -61,23 +95,24 @@
   </div>
 </section>
 <section appReveal id="history" class="match-history section-wrap">
-  <div class="section-heading"><div><span class="eyebrow">04 / MATCH CENTER</span><h2>SAU TIẾNG CÒI.<br/><em>CÒN CÂU CHUYỆN.</em></h2></div><p>{{ matchCounts.all }} trận đã thi đấu.<br/>{{ matchCounts.win }} chiến thắng cùng những người anh em.</p></div>
-  @for (fixture of upcomingMatches; track fixture.id) {
+  <div class="section-heading"><div><span class="eyebrow">04 / MATCH CENTER</span><h2>SAU TIẾNG CÒI.<br/><em>CÒN CÂU CHUYỆN.</em></h2></div><p>{{ matchCounts().all }} trận đã thi đấu.<br/>{{ matchCounts().win }} chiến thắng cùng những người anh em.</p></div>
+  @for (fixture of otherFixtures(); track fixture.id) {
     <article class="fixture-panel" [id]="'upcoming-' + fixture.id" [attr.aria-labelledby]="'fixture-' + fixture.id">
-      <div class="fixture-poster"><img appPhoto [src]="fixture.poster" [alt]="'Poster trận FC Chẹp Chẹp gặp ' + fixture.opponent + ', ' + fixture.time + ' ngày ' + formatDate(fixture.displayDate)" loading="lazy" /></div>
-      <div class="fixture-content"><span class="eyebrow">TRẬN SẮP TỚI / MATCH DAY</span><h3 [id]="'fixture-' + fixture.id">HẸN NHAU<br/><em>TRÊN SÂN.</em></h3>
-        <div class="fixture-datetime"><time [attr.datetime]="fixture.kickoff"><strong>{{ fixture.time }}</strong><span>{{ formatDate(fixture.displayDate) }} · Giờ Việt Nam</span></time><span class="fixture-label">SẮP DIỄN RA</span></div>
+      <div class="fixture-poster"><img appPhoto [src]="fixture.poster" [alt]="'Poster trận FC Chẹp Chẹp gặp ' + fixture.opponent + ', ' + fixture.displayTime + ' ngày ' + formatDate(fixture.displayDate)" loading="lazy" /></div>
+      <div class="fixture-content"><span class="eyebrow">TRẬN ĐẤU / MATCH DAY</span><h3 [id]="'fixture-' + fixture.id">HẸN NHAU<br/><em>TRÊN SÂN.</em></h3>
+        <div class="fixture-datetime"><time [attr.datetime]="fixture.kickoff"><strong>{{ fixture.displayTime }}</strong><span>{{ formatDate(fixture.displayDate) }} · Giờ Việt Nam</span></time><span class="fixture-label">{{ fixtureLabel(fixture.state) }}</span></div>
         <div class="fixture-teams"><div><img src="/images/opponents/chepchep.webp" alt="Logo FC Chẹp Chẹp" width="48" height="48" loading="lazy" /><span>FC Chẹp Chẹp</span></div><span class="fixture-versus" aria-label="gặp">VS</span><div><img [src]="fixture.opponentLogo" [alt]="'Logo ' + fixture.opponent" width="48" height="48" loading="lazy" /><span>{{ fixture.opponent }}</span></div></div>
-        @if (fixture.venue) {<p class="fixture-venue">Sân thi đấu: {{ fixture.venue }}</p>}
+        <p class="fixture-venue">Sân thi đấu: {{ fixture.venue || 'Chưa cập nhật' }}</p>
+        @if (fixture.notes) {<p class="fixture-venue">{{ fixture.notes }}</p>}
         <a class="match-source fixture-source" [href]="fixture.sourceUrl" target="_blank" rel="noopener noreferrer">{{ fixture.sourceIsProfile ? 'Theo dõi trên Instagram của đội' : 'Bài giới thiệu trận đấu' }}<app-icon name="arrow-up-right" /></a>
       </div>
     </article>
   }
   <div class="history-toolbar">
-    <div class="history-filters" role="group" aria-label="Lọc kết quả trận đấu">@for (filter of historyFilters; track filter.id) {<button [class.active]="historyResult() === filter.id" [attr.aria-pressed]="historyResult() === filter.id" (click)="historyResult.set(filter.id)">{{ filter.label }} <span>{{ filter.count }}</span></button>}</div>
-    <label class="history-month">Theo tháng<select aria-label="Lọc tháng lịch sử trận đấu" [value]="historyMonth()" (change)="setHistoryMonth($event)"><option value="all">Tất cả tháng</option>@for (month of historyMonths; track month) {<option [value]="month">{{ formatMonth(month) }}</option>}</select></label>
+    <div class="history-filters" role="group" aria-label="Lọc kết quả trận đấu">@for (filter of historyFilters(); track filter.id) {<button [class.active]="historyResult() === filter.id" [attr.aria-pressed]="historyResult() === filter.id" (click)="historyResult.set(filter.id)">{{ filter.label }} <span>{{ filter.count }}</span></button>}</div>
+    <label class="history-month">Theo tháng<select aria-label="Lọc tháng lịch sử trận đấu" [value]="historyMonth()" (change)="setHistoryMonth($event)"><option value="all">Tất cả tháng</option>@for (month of historyMonths(); track month) {<option [value]="month">{{ formatMonth(month) }}</option>}</select></label>
   </div>
-  @if (hasUnverifiedMatchDates) {<p class="history-date-note">Ngày hiển thị là ngày đăng bài kết quả trên Instagram. Ngày thi đấu chưa được xác nhận.</p>}
+  @if (hasUnverifiedMatchDates()) {<p class="history-date-note">Ngày hiển thị là ngày đăng bài kết quả trên Instagram. Ngày thi đấu chưa được xác nhận.</p>}
   @for (group of historyGroups(); track group.month) {
     <div class="history-group"><h3 class="history-group-title">{{ formatMonth(group.month) }} <span>{{ group.matches.length }} TRẬN</span></h3>
       <div class="match-grid">@for (match of group.matches; track match.id) {

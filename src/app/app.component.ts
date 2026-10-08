@@ -1,4 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, computed, effect, inject, signal, ViewChild } from '@angular/core';
+import matchPreferences from '../data/match-preferences.json';
+import { getMatchState, kickoffTimestamp, getCountdown, hasMatchScore } from '../services/match-status';
 import { getMembers, getScorers, getMatches, getNews } from '../services/content';
 import { InteractionsService, PlayerStats } from '../services/interactions.service';
 import { InteractionUiService } from './interactions/interaction-ui.service';
@@ -33,40 +35,63 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   readonly news = getNews();
-  readonly upcomingMatches = getMatches().filter(match => match.status === 'upcoming')
-    .map(match => ({ ...match, displayDate: match.date ?? '', venue: match.venue as string | null }))
-    .sort((a, b) => (a.kickoff ?? a.displayDate).localeCompare(b.kickoff ?? b.displayDate));
-  readonly historyMatches = getMatches().filter((match): match is typeof match & { scoreFor: number; scoreAgainst: number } =>
-    match.status === 'played' && typeof match.scoreFor === 'number' && typeof match.scoreAgainst === 'number'
-    && (typeof match.date === 'string' || typeof match.postedAt === 'string')).map(match => ({
-    ...match,
-    displayDate: match.date ?? match.postedAt ?? '',
-    result: match.scoreFor > match.scoreAgainst ? 'win' : match.scoreFor < match.scoreAgainst ? 'loss' : 'draw',
-  })).sort((a, b) => b.displayDate.localeCompare(a.displayDate));
+  readonly now = signal(Date.now());
+  readonly matchPreferences: { lookingForMatch: boolean; level?: string | null; preferredTime?: string | null } = matchPreferences;
+  private matchTimer?: ReturnType<typeof setInterval>;
+  readonly matches = computed(() => getMatches().map(match => {
+    const kickoff = kickoffTimestamp(match);
+    return { ...match, state: getMatchState(match, this.now()), kickoffTimestamp: kickoff,
+      displayDate: kickoff !== null ? this.vietnamDate(kickoff) : match.date ?? match.postedAt ?? '',
+      displayTime: kickoff !== null ? new Intl.DateTimeFormat('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(kickoff) : match.time ?? '',
+      venue: match.venue as string | null | undefined,
+      notes: (match as typeof match & { notes?: string }).notes,
+    };
+  }));
+  readonly upcomingMatches = computed(() => this.matches().filter(match => match.state === 'upcoming')
+    .sort((a, b) => a.kickoffTimestamp! - b.kickoffTimestamp!));
+  readonly nextMatch = computed(() => this.upcomingMatches()[0] ?? null);
+  readonly countdown = computed(() => {
+    const match = this.nextMatch();
+    return match ? getCountdown(match.kickoffTimestamp!, this.now()) : null;
+  });
+  readonly otherFixtures = computed(() => this.matches().filter(match => match.id !== this.nextMatch()?.id &&
+    (match.state !== 'finished' || !hasMatchScore(match)))
+    .sort((a, b) => (a.kickoffTimestamp ?? Infinity) - (b.kickoffTimestamp ?? Infinity)));
+  readonly historyMatches = computed(() => this.matches().filter((match): match is typeof match & { scoreFor: number; scoreAgainst: number } =>
+    match.state === 'finished' && hasMatchScore(match)).map(match => ({
+      ...match, result: match.scoreFor > match.scoreAgainst ? 'win' : match.scoreFor < match.scoreAgainst ? 'loss' : 'draw',
+    })).sort((a, b) => b.displayDate.localeCompare(a.displayDate)));
+  private vietnamDate(timestamp: number) {
+    const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(timestamp);
+    return ['year', 'month', 'day'].map(type => parts.find(part => part.type === type)!.value).join('-');
+  }
+  fixtureLabel(state: string) {
+    return state === 'upcoming' ? 'Sắp diễn ra' : state === 'live' ? 'Đang diễn ra' : state === 'finished' ? 'Chờ cập nhật kết quả' : 'Chưa xác định giờ đá';
+  }
   readonly historyResult = signal('all');
   readonly historyMonth = signal('all');
-  readonly matchCounts = {
-    all: this.historyMatches.length,
-    win: this.historyMatches.filter(match => match.result === 'win').length,
-    draw: this.historyMatches.filter(match => match.result === 'draw').length,
-    loss: this.historyMatches.filter(match => match.result === 'loss').length,
-  };
-  readonly historyFilters = [
-    { id: 'all', label: 'Tất cả', count: this.matchCounts.all },
-    { id: 'win', label: 'Thắng', count: this.matchCounts.win },
-    { id: 'draw', label: 'Hòa', count: this.matchCounts.draw },
-    { id: 'loss', label: 'Thua', count: this.matchCounts.loss },
-  ];
-  readonly historyMonths = [...new Set(this.historyMatches.map(match => match.displayDate.slice(0, 7)))];
+  readonly matchCounts = computed(() => ({
+    all: this.historyMatches().length,
+    win: this.historyMatches().filter(match => match.result === 'win').length,
+    draw: this.historyMatches().filter(match => match.result === 'draw').length,
+    loss: this.historyMatches().filter(match => match.result === 'loss').length,
+  }));
+  readonly historyFilters = computed(() => [
+    { id: 'all', label: 'Tất cả', count: this.matchCounts().all },
+    { id: 'win', label: 'Thắng', count: this.matchCounts().win },
+    { id: 'draw', label: 'Hòa', count: this.matchCounts().draw },
+    { id: 'loss', label: 'Thua', count: this.matchCounts().loss },
+  ]);
+  readonly historyMonths = computed(() => [...new Set(this.historyMatches().map(match => match.displayDate.slice(0, 7)))]);
   readonly historyGroups = computed(() => {
-    const filtered = this.historyMatches.filter(match =>
+    const filtered = this.historyMatches().filter(match =>
       (this.historyResult() === 'all' || match.result === this.historyResult()) &&
       (this.historyMonth() === 'all' || match.displayDate.startsWith(this.historyMonth())));
     return [...new Set(filtered.map(match => match.displayDate.slice(0, 7)))].map(month => ({
       month, matches: filtered.filter(match => match.displayDate.startsWith(month)),
     }));
   });
-  readonly hasUnverifiedMatchDates = this.historyMatches.some(match => !match.dateVerified);
+  readonly hasUnverifiedMatchDates = computed(() => this.historyMatches().some(match => !match.dateVerified));
   setHistoryMonth(event: Event) { this.historyMonth.set((event.target as HTMLSelectElement).value); }
   formatMonth(month: string) { const [year, number] = month.split('-'); return `Tháng ${Number(number)} / ${year}`; }
   formatDate(date: string) { return date.split('-').reverse().join('/'); }
@@ -92,7 +117,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       // Hero đã có CTA; không che controls, lịch thi đấu hoặc form liên hệ.
       this.showStickyContact.set(visible.size === 0);
     }, { rootMargin: '0px 0px -72px 0px' });
-    for (const id of ['home', 'spotlight', 'news', 'contact']) {
+    for (const id of ['home', 'upcoming', 'spotlight', 'news', 'contact']) {
       const section = document.getElementById(id);
       if (section) this.contactObserver.observe(section);
     }
@@ -109,6 +134,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private exitTimer?: ReturnType<typeof setTimeout>;
 
   ngOnInit() {
+    this.matchTimer = setInterval(() => this.now.set(Date.now()), 1000);
     this.autoplay.set(!matchMedia('(prefers-reduced-motion: reduce)').matches);
     this.startAutoplay();
   }
@@ -193,5 +219,5 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.touchStart = null;
   }
   submit(event: Event) { event.preventDefault(); this.submitted.set(true); }
-  ngOnDestroy() { this.playerStatsRequest++; this.contactObserver?.disconnect(); clearInterval(this.autoTimer); clearTimeout(this.exitTimer); this.close(); }
+  ngOnDestroy() { clearInterval(this.matchTimer); this.playerStatsRequest++; this.contactObserver?.disconnect(); clearInterval(this.autoTimer); clearTimeout(this.exitTimer); this.close(); }
 }
