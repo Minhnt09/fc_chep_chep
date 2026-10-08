@@ -10,6 +10,7 @@
   <div class="team-visual"><img appPhoto src="/images/team.webp" alt="Đội hình FC Chẹp Chẹp trong áo đấu trắng vàng cùng nâng cúp" loading="eager" /></div>
   <div class="hero-bottom"><span>CHUNG MÀU ÁO.<br/>CHUNG ĐAM MÊ.</span><a class="button" href="#contact">BẮT ĐÔI GIAO LƯU <app-icon name="arrow-up-right" /></a><a class="discover" href="#spotlight">GẶP ANH EM <app-icon name="arrow-down" /></a></div>
 </section>
+<app-team-interactions />
 <div class="team-strip" aria-hidden="true"><span>CHẸP CHẸP FC</span><i class="strip-divider"></i><span>ANH EM MỘT ĐỘI</span><i class="strip-divider"></i><span>RA SÂN HẾT MÌNH</span><i class="strip-divider"></i><span>CHẸP CHẸP FC</span></div>
 <section appReveal id="spotlight" class="spotlight section-wrap">
   <div class="section-heading"><div><span class="eyebrow">01 / PLAYER INTRODUCTION</span><h2>GƯƠNG MẶT.<br/><em>CÁ TÍNH.</em></h2></div><p>Mỗi người một chất riêng.<br/>Cùng viết nên câu chuyện Chẹp Chẹp.</p></div>
@@ -26,16 +27,16 @@
       }
     }
     </div>
-    <div class="stage-bottom"><button class="text-button" (click)="open(featured())">XEM CHÂN DUNG <app-icon name="arrow-up-right" /></button><div class="stage-controls"><button class="autoplay-toggle" (click)="toggleAutoplay()" [attr.aria-label]="autoplay() ? 'Tạm dừng tự đổi cầu thủ' : 'Bật tự đổi cầu thủ'" [attr.aria-pressed]="autoplay()"><app-icon [name]="autoplay() ? 'pause' : 'play'" /></button><button (click)="changeFeatured(-1)" aria-label="Giới thiệu thành viên trước"><app-icon name="arrow-left" /></button><button (click)="changeFeatured(1)" aria-label="Giới thiệu thành viên tiếp theo"><app-icon name="arrow-right" /></button></div></div>
+    <div class="stage-bottom"><button class="text-button" (click)="open(featured(), $event)">XEM CHÂN DUNG <app-icon name="arrow-up-right" /></button><div class="stage-controls"><button class="autoplay-toggle" (click)="toggleAutoplay()" [attr.aria-label]="autoplay() ? 'Tạm dừng tự đổi cầu thủ' : 'Bật tự đổi cầu thủ'" [attr.aria-pressed]="autoplay()"><app-icon [name]="autoplay() ? 'pause' : 'play'" /></button><button (click)="changeFeatured(-1)" aria-label="Giới thiệu thành viên trước"><app-icon name="arrow-left" /></button><button (click)="changeFeatured(1)" aria-label="Giới thiệu thành viên tiếp theo"><app-icon name="arrow-right" /></button></div></div>
   </div>
 </section>
     <section appReveal id="members" class="members section-wrap"><div class="section-heading"><div><span class="eyebrow">02 / THE SQUAD</span><h2>ANH EM<br/><em>CHẸP CHẸP.</em></h2></div><p>Mỗi người một cá tính.<br/>Cùng nhau thành một đội.</p></div><div class="member-grid">@for (member of members; track member.id; let index = $index) {
-<button class="member-card" (click)="open(index)" [attr.aria-label]="'Xem ảnh ' + member.name">
+<button class="member-card" (click)="open(index, $event)" [attr.aria-label]="'Xem ảnh ' + member.name">
   <div class="portrait"><span class="card-name" aria-hidden="true">{{ member.nickname }}</span><span class="member-index">{{ (index + 1).toString().padStart(2, '0') }}</span>
     <img appPhoto [src]="member.image" [alt]="'Thành viên ' + member.name" loading="lazy" />
     <span class="expand" aria-hidden="true"><app-icon name="expand" /></span>
   </div>
-  <div class="member-caption"><h3>{{ member.name }}</h3>@if (member.number !== null || member.position !== 'Chưa cập nhật') {<p>{{ member.number !== null ? '#' + member.number : '' }}{{ member.number !== null && member.position !== 'Chưa cập nhật' ? ' · ' : '' }}{{ member.position !== 'Chưa cập nhật' ? member.position : '' }}</p>}</div>
+  <div class="member-caption"><h3>{{ member.name }}</h3>@if (member.number !== null || member.position !== 'Chưa cập nhật') {<p>{{ member.number !== null ? '#' + member.number : '' }}{{ member.number !== null && member.position !== 'Chưa cập nhật' ? ' · ' : '' }}{{ member.position !== 'Chưa cập nhật' ? member.position : '' }}</p>}<app-member-interactions [counts]="playerStats()[member.id]" /></div>
 </button>
 }</div><p class="data-note">{{ members.length }} anh em. Một màu áo. Một đam mê.</p></section>
 <section appReveal id="scorers" class="scoring section-wrap">
@@ -105,12 +106,19 @@
     <footer>
   <div class="footer-main"><a class="footer-brand" href="#home">FC CHẸP CHẸP<span>ANH EM MỘT ĐỘI.</span></a><a class="footer-contact" href="https://www.instagram.com/chepchepfc/" target="_blank" rel="noopener noreferrer"><app-icon name="instagram" /> Instagram</a><a class="footer-contact" href="https://zalo.me/0397655089" target="_blank" rel="noopener noreferrer" aria-label="Nhắn tin qua Zalo"><app-icon name="zalo" /> Zalo</a><a class="footer-contact" href="tel:0397655089"><app-icon name="phone" /> 0397 655 089</a></div>
   <p class="footer-copyright">Copyright &copy;&#xfe0e; 2026 MinhNT</p>
-</footer>@if (showStickyContact()) {<a class="sticky-contact button" href="#contact">Bắt đôi giao lưu <app-icon name="arrow-up-right" /></a>}
+</footer>@if (showStickyContact() && !modal.isOpen()) {<a class="sticky-contact button" href="#contact">Bắt đôi giao lưu <app-icon name="arrow-up-right" /></a>}
 @if (selectedMember; as member) {
 <div class="lightbox" role="dialog" aria-modal="true" [attr.aria-label]="'Ảnh thành viên ' + member.name" (touchstart)="startTouch($event)" (touchend)="endTouch($event)">
   <button #closeButton class="close" (click)="close()" aria-label="Đóng ảnh"><app-icon name="close" /></button>
   <img appPhoto [src]="member.image" [alt]="'Chân dung ' + member.name" loading="eager" />
   <div class="lightbox-caption"><button (click)="change(-1)" aria-label="Thành viên trước"><app-icon name="arrow-left" /></button><div><h2>{{ member.name }}</h2><p>{{ member.position }} · {{ (selected() ?? 0) + 1 }}/{{ members.length }}</p></div><button (click)="change(1)" aria-label="Thành viên tiếp theo"><app-icon name="arrow-right" /></button></div>
+  <div class="lightbox-interactions" (touchstart)="$event.stopPropagation()" (touchend)="$event.stopPropagation()">
+    <app-reaction-bar targetType="player" [targetId]="member.id" [targetName]="member.name" />
+    <button type="button" class="player-comment-button" (click)="interactionUi.openComments(member.id, member.name, $event)"><app-icon name="comment" />Bình luận<span>{{ playerStats()[member.id]?.comments ?? 0 }}</span></button>
+    @if (interactions.sessionWarning()) {<p class="interaction-error" role="status">{{ interactions.sessionWarning() }}</p>}
+  </div>
   <p class="swipe-hint">Vuốt ngang để đổi ảnh · Vuốt xuống để đóng</p>
 </div>
 }
+
+<app-interactions-overlay />

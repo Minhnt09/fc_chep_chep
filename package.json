@@ -6,13 +6,16 @@
     "start": "ng serve --host 0.0.0.0 --port 5173",
     "dev": "ng serve --host 0.0.0.0 --port 5173",
     "build": "ng build",
-    "preview": "ng serve --host 0.0.0.0 --port 5173 --configuration production"
+    "preview": "ng serve --host 0.0.0.0 --port 5173 --configuration production",
+    "test:interactions": "node scripts/test-interactions.mjs",
+    "test:interactions:database": "node scripts/test-interactions-database.mjs"
   },
   "dependencies": {
     "@angular/common": "^21.2.0",
     "@angular/compiler": "^21.2.0",
     "@angular/core": "^21.2.0",
     "@angular/platform-browser": "^21.2.0",
+    "@supabase/supabase-js": "^2.109.0",
     "rxjs": "^7.8.2",
     "tslib": "^2.8.1"
   },
@@ -20,10 +23,10 @@
     "@angular/build": "^21.2.0",
     "@angular/cli": "^21.2.0",
     "@angular/compiler-cli": "^21.2.0",
-    "typescript": "~5.9.3",
-    "tailwindcss": "^4.0.0",
     "@tailwindcss/postcss": "^4.0.0",
-    "postcss": "^8.5.0"
+    "postcss": "^8.5.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "~5.9.3"
   },
   "engines": {
     "node": "^20.19.0 || ^22.12.0"

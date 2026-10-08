@@ -27,7 +27,7 @@ Build production nằm trong `dist/fc-chep-chep/browser`. `preview` chạy Angul
 - Hero dùng ảnh cả đội, nền giấy/grunge, chữ lớn và tông trắng ngà–vàng–đen theo video giới thiệu.
 - Khung giới thiệu cầu thủ dạng poster, tự đổi mỗi 2 giây, đổi hướng bằng nút hoặc vuốt ngang, có nút tạm dừng; chuyển cảnh bằng transform/opacity.
 - Lưới 13 thành viên, 2 cột trên điện thoại; lightbox có nút đóng, phím Escape, phím mũi tên, vuốt ngang và vuốt xuống.
-- Form liên hệ chỉ xem trước, chưa lưu/gửi dữ liệu. Thông tin Zalo, Facebook và điện thoại chờ cập nhật.
+- Form liên hệ chỉ xem trước, chưa lưu/gửi dữ liệu. Có liên kết Instagram, Zalo và gọi điện tới 0397655089.
 - Hiệu ứng xuất hiện khi cuộn và hỗ trợ giảm chuyển động.
 
 Logo và texture giấy được trích từ video tham chiếu đội cung cấp. Có thể thay logo bằng file gốc sắc nét hơn khi có tài nguyên riêng.
@@ -70,6 +70,31 @@ Sau khi đẩy lên GitHub: vào Vercel → Add New → Project → Import repos
 ## Icon và kiểm tra mobile
 
 `src/app/icon.component.ts` cung cấp icon SVG dùng chung, không sử dụng ký tự emoji cho nút điều khiển. Xem kết quả rà giao diện tại `markdown/mobile-ui-review.md`.
+
+## Tương tác dùng chung — Supabase
+
+Cảm xúc cho đội/cầu thủ, đánh giá 1–5 sao kèm góp ý và bình luận cầu thủ dùng database Supabase. Khách chỉ nhập tên, không cần email/mật khẩu. Giao diện, ảnh, lightbox và nội dung JSON vẫn giữ trên Angular.
+
+**Cần chạy migration và bật Anonymous sign-ins trước khi dùng.** URL/key public đã cấu hình cho project `gbjtvclrciqgiwvsutto`; localhost và production dùng cùng database. Xem [hướng dẫn thiết lập](markdown/supabase-interactions-setup.md).
+
+- `src/services/interactions.service.ts`: API bất đồng bộ và validation giao diện.
+- `src/services/supabase-interactions.adapter.ts`: session ẩn danh, cập nhật tên, RPC và lỗi mạng.
+- `src/services/interactions.types.ts`: DTO công khai không chứa visitor UUID của người khác.
+- `supabase/migrations/202610080001_shared_interactions.sql`: bảng, RLS, quyền cột, RPC đọc/ghi, cooldown và giới hạn cảm xúc.
+- `src/environments/environment.ts`: URL/publishable key production; bản development dùng cùng cấu hình. Angular chọn qua `fileReplacements`, không đọc `.env` tự động.
+- `src/app/interactions/`: UI cảm xúc, đánh giá, bình luận và quản lý sheet/focus.
+
+Mỗi phiên khách đánh giá đội tối đa một lần; review/comment dùng chung cooldown 30 giây tại database. Cảm xúc tối đa 30 yêu cầu bật/tắt mỗi phút/visitor. Danh sách tải 5 mục/lần. Bài bị ẩn không hiển thị và không tham gia thống kê. Chưa có CAPTCHA, cron, trang admin hoặc Realtime; trình duyệt khác tải lại để thấy cập nhật.
+
+Khóa local cũ `fc-chep-chep:interactions:v1` không được đọc hoặc tự đưa lên database. Chỉ session Supabase được lưu trên trình duyệt ở khóa `fc-chep-chep:auth:gbjtvclrciqgiwvsutto`. Xóa session không xóa bài đã gửi trên hệ thống; có thể tạo visitor khác khi nhập tên lần sau. Tên hiển thị không xác minh danh tính.
+
+```bash
+npm run test:interactions
+npm run test:interactions:database  # Cần Docker và image postgres:17-alpine
+npm run build
+```
+
+Test database chạy trên container riêng và tự dọn, không sửa Supabase production. Biên bản giai đoạn 1 ở `markdown/interactions-stage1-review.md` là lịch sử bản local; bản hiện tại đã thay nguồn dữ liệu. Xem kết quả mới tại `markdown/interactions-stage2-review.md`.
 
 ## Lịch sử trận đấu và tin tức
 

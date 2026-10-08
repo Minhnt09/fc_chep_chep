@@ -1,0 +1,69 @@
+<dialog #dialog class="interaction-dialog" aria-labelledby="interaction-sheet-title"
+  [style.max-height.px]="viewportHeight() - 20" [style.bottom.px]="keyboardInset()"
+  (cancel)="cancel($event)" (click)="backdrop($event)" (touchstart)="$event.stopPropagation()" (touchend)="$event.stopPropagation()">
+  @if (ui.sheet(); as sheet) {
+    <div class="interaction-sheet">
+      <header class="interaction-sheet-header" (touchstart)="startDrag($event)" (touchend)="endDrag($event)">
+        <div class="sheet-drag-handle" aria-hidden="true"></div>
+        <span class="eyebrow">KHÁN ĐÀI / FC CHẸP CHẸP</span>
+        <h2 id="interaction-sheet-title">{{ sheet.mode === 'identity' ? (sheet.changing ? 'Tên của bạn.' : 'Chào bạn, mình là…') : sheet.mode === 'review' ? 'Một lời góp ý.' : 'Lời nhắn cho ' + sheet.playerName }}</h2>
+        <button type="button" class="sheet-close" [disabled]="saving()" (click)="close()" aria-label="Đóng hộp tương tác"><app-icon name="close" /></button>
+      </header>
+      <div class="interaction-sheet-body">
+        @switch (sheet.mode) {
+          @case ('identity') {
+            <p class="sheet-intro">Một cái tên để lời cổ vũ thêm gần gũi. Không cần tài khoản.</p>
+            <form (submit)="submitIdentity($event)" novalidate>
+              <label for="fan-display-name">Tên hiển thị <span>{{ name().length }}/30</span></label>
+              <input id="fan-display-name" name="displayName" data-initial-focus autocomplete="nickname" maxlength="30" [value]="name()" (input)="updateName($event)" [attr.aria-invalid]="!!nameError()" aria-describedby="name-error" placeholder="Bạn muốn được gọi là gì?" />
+              <p class="interaction-field-error" id="name-error">{{ nameError() }}</p>
+              <button type="submit" class="button interaction-submit" [disabled]="saving()">{{ saving() ? 'Đang lưu…' : sheet.changing ? 'Lưu tên' : 'Tiếp tục' }}<app-icon name="arrow-right" /></button>
+            </form>
+          }
+          @case ('review') {
+            @if (reviewLoading()) {<p class="interaction-empty" role="status">Đang tải đánh giá…</p>}
+            @else if (reviewLoadError()) {<p class="interaction-error" role="alert">{{ reviewLoadError() }}</p>}
+            @else if (ownReview(); as review) {
+              <article class="sheet-own-review"><span class="eyebrow">ĐÁNH GIÁ CỦA BẠN</span><div class="interaction-entry-heading"><strong>{{ review.displayName }}</strong><time [attr.datetime]="review.createdAt">{{ formatTime(review.createdAt) }}</time></div><div class="entry-stars" [attr.aria-label]="review.rating + ' trên 5 sao'">@for (star of stars; track star) {<app-icon name="star" [filled]="star <= review.rating" />}</div><p>{{ review.content }}</p></article>
+              <p class="sheet-intro">Bạn đã đánh giá đội. Cảm ơn lời góp ý của bạn.</p>
+            } @else if (hasReviewed()) {<p class="sheet-intro">Bạn đã gửi đánh giá. Nội dung hiện không được hiển thị sau khi kiểm duyệt.</p>}
+            @else {
+              <p class="sheet-intro">Khen một chút, góp ý một chút. Tụi mình luôn lắng nghe.</p>
+              <form (submit)="submitReview($event)" novalidate>
+                <div class="review-rating-picker" role="radiogroup" aria-label="Điểm đánh giá" aria-describedby="rating-error">
+                  @for (star of stars; track star) {<button type="button" role="radio" [attr.data-rating]="star" [attr.aria-label]="star + ' sao'" [attr.aria-checked]="rating() === star" [attr.tabindex]="rating() === star || rating() === 0 && star === 1 ? 0 : -1" [attr.data-initial-focus]="star === 1 ? '' : null" (click)="selectRating(star)" (keydown)="ratingKey($event, star)"><app-icon name="star" [filled]="star <= rating()" /></button>}
+                </div><p class="interaction-field-error" id="rating-error">{{ ratingError() }}</p>
+                <div class="sheet-author"><span>Tên hiển thị</span><strong>{{ service.visitor()?.displayName }}</strong></div>
+                <label for="fan-review">Góp ý của bạn <span>{{ draft().length }}/300</span></label>
+                <textarea id="fan-review" name="feedback" rows="4" maxlength="300" [value]="draft()" (input)="updateDraft($event)" [attr.aria-invalid]="!!contentError()" aria-describedby="content-error" placeholder="Điều bạn thích, điều đội có thể làm tốt hơn…"></textarea>
+                <p class="interaction-field-error" id="content-error">{{ contentError() }}</p>
+                <button type="submit" class="button interaction-submit" [disabled]="saving()">{{ saving() ? 'Đang lưu…' : 'Gửi đánh giá' }}<app-icon name="arrow-up-right" /></button>
+              </form>
+            }
+          }
+          @case ('comments') {
+            <div class="sheet-comments" aria-label="Danh sách bình luận">
+              @if (commentsLoading()) {<p class="interaction-empty" role="status">Đang tải bình luận…</p>}
+              @else if (commentsLoadError()) {<p class="interaction-error" role="alert">{{ commentsLoadError() }}</p><button type="button" class="text-button" (click)="retryComments(sheet.playerId)">Thử tải lại</button>}
+              @else { @for (comment of comments(); track comment.id) {<article class="sheet-comment"><div class="interaction-entry-heading"><strong>{{ comment.displayName }}</strong><time [attr.datetime]="comment.createdAt">{{ formatTime(comment.createdAt) }}</time></div><p>{{ comment.content }}</p></article>}
+                @empty {<p class="interaction-empty">Chưa có lời nhắn. Gửi một lời cổ vũ cho {{ sheet.playerName }} nhé!</p>} }
+              @if (hasMore()) {<button type="button" class="text-button" [disabled]="loadingMore()" (click)="moreComments(sheet.playerId)">{{ loadingMore() ? 'Đang tải…' : 'Xem thêm bình luận' }}<app-icon name="arrow-down" /></button>}
+            </div>
+            <form class="comment-compose" (submit)="submitComment($event, sheet.playerId, sheet.playerName)" novalidate>
+              <div class="sheet-author"><span>Gửi dưới tên</span><strong>{{ service.visitor()?.displayName ?? 'Nhập tên ở bước tiếp theo' }}</strong></div>
+              <label for="fan-comment">Lời nhắn của bạn <span>{{ draft().length }}/200</span></label>
+              <textarea id="fan-comment" name="comment" data-initial-focus rows="3" maxlength="200" [value]="draft()" (input)="updateDraft($event)" [attr.aria-invalid]="!!contentError()" aria-describedby="content-error" placeholder="Một lời nhắn dành riêng cho cầu thủ…"></textarea>
+              <p class="interaction-field-error" id="content-error">{{ contentError() }}</p>
+              <button type="submit" class="button interaction-submit" [disabled]="saving()">{{ saving() ? 'Đang lưu…' : 'Gửi bình luận' }}<app-icon name="arrow-up-right" /></button>
+            </form>
+          }
+        }
+        @if (error()) {<p class="interaction-error" role="alert">{{ error() }}</p>}
+        @if (ui.error()) {<p class="interaction-error" role="alert">{{ ui.error() }}</p>}
+        @if (notice()) {<p class="interaction-notice" role="status">{{ notice() }}</p>}
+        @if (service.sessionWarning()) {<p class="interaction-error" role="status">{{ service.sessionWarning() }}</p>}
+        <p class="interaction-local-note">Tương tác được chia sẻ công khai. Tên hiển thị không phải danh tính đã xác minh.</p>
+      </div>
+    </div>
+  }
+</dialog>
