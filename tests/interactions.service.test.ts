@@ -68,3 +68,17 @@ test('restoration awaits existing session and backend errors have actionable saf
   assert.match(interactionError({code:'P0001',message:'Vui lòng đợi 30 giây'}).message,/đợi/);
   assert.match(interactionError(new TypeError('Failed to fetch')).message,/chưa được xác nhận gửi/);
 });
+
+test('player heart counts are separate from total reactions and remain keyed by stable player ID', async () => {
+  const { backend, service } = setup();
+  backend.handler = (name, args) => {
+    if (name === 'fc_player_stats') return Object.fromEntries(getMembers().map(m => [m.id, { reactions: 20, comments: 2 }]));
+    const summary = emptyReactionSummary(); summary.total = 20; summary.counts.fire = 19;
+    summary.counts.heart = args['p_target_id'] === first.id ? 1 : 0;
+    return summary;
+  };
+  const stats = await service.getPlayerStats();
+  assert.equal(stats[first.id].hearts, 1); assert.equal(stats[first.id].reactions, 20);
+  assert.equal(stats[getMembers()[1].id].hearts, 0); assert.equal(stats[first.id].comments, 2);
+  assert.equal(Object.keys(stats).length, getMembers().length);
+});

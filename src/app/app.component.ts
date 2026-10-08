@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, computed, effect, inject, signal, ViewChild } from '@angular/core';
 import { getMembers, getScorers, getMatches, getNews } from '../services/content';
-import { InteractionsService } from '../services/interactions.service';
+import { InteractionsService, PlayerStats } from '../services/interactions.service';
 import { InteractionUiService } from './interactions/interaction-ui.service';
 import { ModalStateService } from './interactions/modal-state.service';
 import { TeamInteractionsComponent } from './interactions/team-interactions.component';
@@ -21,7 +21,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly interactionUi = inject(InteractionUiService);
   readonly modal = inject(ModalStateService);
   readonly interactions = inject(InteractionsService);
-  readonly playerStats = signal<Record<string, { reactions: number; comments: number }>>({});
+  readonly playerStats = signal<PlayerStats>({});
+  readonly rankedMembers = computed(() => this.members.map((member, originalIndex) => ({ ...member, originalIndex }))
+    .sort((a, b) => (this.playerStats()[b.id]?.hearts ?? 0) - (this.playerStats()[a.id]?.hearts ?? 0) || a.originalIndex - b.originalIndex));
   private playerStatsRequest = 0;
   constructor() {
     effect(() => {

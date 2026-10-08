@@ -8,7 +8,7 @@ export interface Review { id: string; displayName: string; rating: number; conte
 export interface ReactionSummary { counts: Record<ReactionType, number>; selected: ReactionType[]; total: number; }
 export interface Page<T> { items: T[]; total: number; hasMore: boolean; }
 export interface TeamStats { count: number; average: number | null; ownReview: Review | null; hasReviewed: boolean; }
-export type PlayerStats = Record<string, { reactions: number; comments: number }>;
+export type PlayerStats = Record<string, { reactions: number; hearts: number; comments: number }>;
 export const TEAM_TARGET: InteractionTarget = { type: 'team', id: 'fc-chep-chep' };
 export const emptyReactionSummary = (): ReactionSummary => ({ counts: { football: 0, fire: 0, applause: 0, heart: 0, laugh: 0 }, selected: [], total: 0 });
 export interface InteractionsBackend {

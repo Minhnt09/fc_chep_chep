@@ -60,7 +60,19 @@ export class InteractionsService implements OnDestroy {
     this.target({ type: 'player', id: playerId }); await this.ready;
     return this.backend.rpc('fc_comments_page', { p_player_id: playerId, ...this.pagination(offset, limit) });
   }
-  async getPlayerStats(): Promise<PlayerStats> { await this.ready; return this.backend.rpc('fc_player_stats', { p_player_ids: playerIds }); }
+  async getPlayerStats(): Promise<PlayerStats> {
+    await this.ready;
+    // Existing RPC reports total reactions. Read aggregate summaries to distinguish hearts,
+    // without downloading raw reactions or requiring another SQL migration.
+    const [totals, hearts] = await Promise.all([
+      this.backend.rpc<Record<string, { reactions: number; comments: number }>>('fc_player_stats', { p_player_ids: playerIds }),
+      Promise.all(playerIds.map(async id => {
+        const summary = await this.getReactionSummary({ type: 'player', id });
+        return [id, summary.counts.heart] as const;
+      })),
+    ]);
+    return Object.fromEntries(hearts.map(([id, count]) => [id, { ...totals[id], hearts: count }]));
+  }
   async addReview(rating: number, content: string): Promise<Review> {
     const text = this.text(content, 300, 'Góp ý');
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) throw Error('Hãy chọn từ 1 đến 5 sao.');

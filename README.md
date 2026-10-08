@@ -84,6 +84,8 @@ Cảm xúc cho đội/cầu thủ, đánh giá 1–5 sao kèm góp ý và bình 
 - `src/environments/environment.ts`: URL/publishable key production; bản development dùng cùng cấu hình. Angular chọn qua `fileReplacements`, không đọc `.env` tự động.
 - `src/app/interactions/`: UI cảm xúc, đánh giá, bình luận và quản lý sheet/focus.
 
+Lưới “Anh em Chẹp Chẹp” xếp theo số cảm xúc `heart` giảm dần; bằng nhau giữ thứ tự trong `members.json`. Số cạnh icon tim là số tim, không phải tổng mọi cảm xúc. Xếp hạng cập nhật sau tương tác và khi tải lại; dùng RPC hiện có, không cần migration mới.
+
 Mỗi phiên khách đánh giá đội tối đa một lần; review/comment dùng chung cooldown 30 giây tại database. Cảm xúc tối đa 30 yêu cầu bật/tắt mỗi phút/visitor. Danh sách tải 5 mục/lần. Bài bị ẩn không hiển thị và không tham gia thống kê. Chưa có CAPTCHA, cron, trang admin hoặc Realtime; trình duyệt khác tải lại để thấy cập nhật.
 
 Khóa local cũ `fc-chep-chep:interactions:v1` không được đọc hoặc tự đưa lên database. Chỉ session Supabase được lưu trên trình duyệt ở khóa `fc-chep-chep:auth:gbjtvclrciqgiwvsutto`. Xóa session không xóa bài đã gửi trên hệ thống; có thể tạo visitor khác khi nhập tên lần sau. Tên hiển thị không xác minh danh tính.

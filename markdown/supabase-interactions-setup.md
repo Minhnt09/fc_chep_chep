@@ -24,11 +24,34 @@ Tài liệu: [Anonymous sign-in](https://supabase.com/docs/guides/auth/auth-anon
 - Ngắt mạng khi gửi: hiển thị lỗi, giữ draft; cảm xúc hoàn tác. Không có bản local thay thế báo thành công.
 - Local và Vercel có session khách khác nhau nhưng cùng dữ liệu công khai nếu build dùng cùng URL/key. Bản Vercel cũ vẫn lưu local cho tới khi được build/deploy lại.
 
+## Database đang ở đâu?
+
+Dữ liệu tương tác nằm trên PostgreSQL của [project Supabase này](https://supabase.com/dashboard/project/gbjtvclrciqgiwvsutto), không nằm trên Vercel hoặc trong folder SQL. File SQL trong repository là hướng dẫn tạo cấu trúc database.
+
+Đăng nhập tài khoản Supabase có quyền quản lý project → Table Editor → schema `public`:
+
+| Bảng | Nội dung |
+| --- | --- |
+| `comments` | Bình luận cầu thủ; `player_id` khớp `id` trong members.json |
+| `reviews` | Điểm đánh giá và góp ý đội |
+| `reactions` | Cảm xúc; tim có `reaction_type = heart`, cầu thủ có `target_type = player` |
+
+Có thể kiểm tra bằng SQL Editor với truy vấn chỉ đọc:
+
+```sql
+select id, player_id, display_name, content, hidden, created_at
+from public.comments
+order by created_at desc
+limit 50;
+```
+
+Quyền quản trị là quyền của tài khoản Supabase trên project; nhập tên “admin” trên website không cấp quyền đó.
+
 ## Kiểm duyệt trong Dashboard
 
 Table Editor → `public.comments` hoặc `public.reviews` → tìm dòng theo tên/nội dung/thời gian. Đặt `hidden = true` để ẩn; tải lại website để kiểm tra. Nội dung bị ẩn không được trả qua RPC/danh sách và không được tính vào thống kê. Có thể đặt lại `hidden = false` để hiện lại.
 
-Có thể xóa dòng bằng Dashboard khi thực sự cần. Nếu xóa đánh giá, visitor đó có thể gửi lại; nếu chỉ ẩn đánh giá, vẫn giữ giới hạn một lần. Không xóa user Auth để reset thử nghiệm: foreign key `ON DELETE CASCADE` sẽ xóa các tương tác liên quan. Tên được lưu tại thời điểm gửi, đổi tên không sửa bài cũ.
+Để xóa comment: chọn đúng dòng trong `public.comments`, chọn thao tác **Delete/Xóa dòng**, kiểm tra nội dung rồi xác nhận. Có thể xóa dòng bằng Dashboard khi thực sự cần. Nếu xóa đánh giá, visitor đó có thể gửi lại; nếu chỉ ẩn đánh giá, vẫn giữ giới hạn một lần. Không xóa user Auth để reset thử nghiệm: foreign key `ON DELETE CASCADE` sẽ xóa các tương tác liên quan. Tên được lưu tại thời điểm gửi, đổi tên không sửa bài cũ.
 
 Client không được INSERT/UPDATE/DELETE trực tiếp vào ba bảng. Đọc trực tiếp review/comment chỉ được các cột công khai, RLS lọc hidden; visitor_id không có quyền đọc công khai. RPC SECURITY DEFINER đặt search_path rỗng, kiểm tra auth.uid() và claim is_anonymous trước ghi. Khóa transaction theo visitor làm cooldown review/comment atomic, kể cả gửi đồng thời. Rate cảm xúc dùng một bảng nhỏ trong schema không expose `fc_private`.
 
