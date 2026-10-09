@@ -318,14 +318,23 @@
     "venue": null,
     "opponent": "Hải sản Hà Đông",
     "opponentLogo": "/images/opponents/haisan-hadong.webp",
-    "scoreFor": null,
-    "scoreAgainst": null,
-    "status": "upcoming",
-    "scorers": [],
-    "poster": "/images/matches/2026-10-08-haisan-hadong.webp",
-    "sourceUrl": "https://www.instagram.com/chepchepfc/",
-    "sourceIsProfile": true,
-    "sourceFile": "history/2026_10_08_19:30.jpg",
+    "scoreFor": 2,
+    "scoreAgainst": 9,
+    "status": "played",
+    "scorers": [
+      {
+        "name": "Sứt",
+        "goals": 1
+      },
+      {
+        "name": "Cầu Hải",
+        "goals": 1
+      }
+    ],
+    "poster": "/images/matches/DePaHHvEtCB.webp",
+    "sourceUrl": "https://www.instagram.com/p/DePaHHvEtCB/",
+    "sourceIsProfile": false,
+    "sourceFile": "results/igexport-DePaHHvEtCB.jpg",
     "dateVerified": true
   }
 ]

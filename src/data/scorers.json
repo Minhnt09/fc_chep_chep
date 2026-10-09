@@ -1,10 +1,10 @@
 {
-  "label": "Trận 6",
+  "label": "Cập nhật sau trận Hải sản Hà Đông · 08/10/2026",
   "players": [
     {
       "id": "sut",
       "name": "Sứt",
-      "goals": 9,
+      "goals": 10,
       "memberId": "sut"
     },
     {
@@ -72,6 +72,12 @@
       "name": "Voi",
       "goals": 0,
       "memberId": "voi"
+    },
+    {
+      "id": "cau-hai",
+      "name": "Cầu Hải",
+      "goals": 1,
+      "memberId": null
     }
   ]
 }

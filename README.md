@@ -42,7 +42,7 @@ Logo và texture giấy được trích từ video tham chiếu đội cung cấ
 - `src/styles.css`: giao diện responsive và Tailwind.
 - `src/services/content.ts`: lớp đọc dữ liệu; thay nguồn tại đây khi nối Supabase.
 - `src/data/members.json`: cập nhật `name`, `nickname`, `number`, `position`, `image`; số áo chưa rõ dùng `null`.
-- `src/data/matches.json`: 10 kết quả trận đấu, đối thủ, logo, người ghi bàn và bài nguồn Instagram.
+- `src/data/matches.json`: 11 kết quả trận đấu, đối thủ, logo, người ghi bàn và bài nguồn Instagram.
 - `src/data/news.json`: ảnh và nội dung tin tức của đội.
 - `src/data/stats.json`: khung thống kê tổng quát chưa hiển thị.
 - `public/images/`: ảnh WebP đã tối ưu từ `img/`. Thư mục `img/` giữ nguyên ảnh gốc.
@@ -65,7 +65,7 @@ Sau khi đẩy lên GitHub: vào Vercel → Add New → Project → Import repos
 
 ## Thống kê ghi bàn
 
-`src/data/scorers.json` chứa bảng **Trận 6** theo ảnh người dùng cung cấp (12 cầu thủ, 27 bàn). Cập nhật `label`, `name`, `goals`, `memberId` tại đây; giao diện tự sắp xếp giảm dần và cộng tổng. `memberId` liên kết ảnh thành viên; Silun đã được nối ảnh từ `img/silun/DUY.png`. Ảnh `img/domixi/DM.png` đã thêm vào đội hình với tên DM và biệt danh DOMIXI; Người dùng đã xác nhận DM/Domixi là cầu thủ khác Hadinggg. Hadinggg đã có ảnh đại diện từ `img/hadinggg/ha.png` và được nối với bảng ghi bàn; thống kê Domixi chưa được cung cấp. Không diễn giải bảng này thành tổng cả mùa hoặc thống kê 6 trận.
+`src/data/scorers.json` chứa bảng nền **Trận 6** theo ảnh người dùng cung cấp, đã cộng thêm kết quả Hải sản Hà Đông ngày 08/10/2026: Sứt từ 9 lên 10 bàn, thêm Cầu Hải 1 bàn (13 cầu thủ, 29 bàn). Cầu Hải chưa có ảnh thành viên nên `memberId` để `null`. Cập nhật `label`, `name`, `goals`, `memberId` tại đây; giao diện tự sắp xếp giảm dần và cộng tổng. `memberId` liên kết ảnh thành viên; Silun đã được nối ảnh từ `img/silun/DUY.png`. Ảnh `img/domixi/DM.png` đã thêm vào đội hình với tên DM và biệt danh DOMIXI; Người dùng đã xác nhận DM/Domixi là cầu thủ khác Hadinggg. Hadinggg đã có ảnh đại diện từ `img/hadinggg/ha.png` và được nối với bảng ghi bàn; thống kê Domixi chưa được cung cấp. Không diễn giải bảng này thành tổng cả mùa hoặc thống kê 6 trận.
 
 ## Icon và kiểm tra mobile
 
@@ -100,7 +100,7 @@ Test database chạy trên container riêng và tự dọn, không sửa Supabas
 
 ## Lịch sử trận đấu và tin tức
 
-Khối lịch thi đấu hiển thị các trận `status: upcoming` trước lịch sử, hiện có trận Hải sản Hà Đông lúc 19:30 ngày 08/10/2026. Tỷ số để `null`, không tính vào thống kê đã đá; giờ có múi giờ Việt Nam. Khi có kết quả, chuyển sang `played`, điền tỷ số/người ghi bàn và link bài nguồn.
+Khối lịch thi đấu hiển thị các trận sắp diễn ra trước lịch sử. Trận Hải sản Hà Đông lúc 19:30 ngày 08/10/2026 đã cập nhật kết quả FC Chẹp Chẹp thua 2–9; Sứt và Cầu Hải mỗi người ghi 1 bàn. Trận có trạng thái `played`, ảnh kết quả và link bài Instagram; được tính vào 11 trận đã đá. Giờ có múi giờ Việt Nam.
 
 Lịch sử nhóm theo tháng, có bộ lọc kết quả và tháng. Chạm thẻ trận để mở người ghi bàn, ảnh kết quả và bài Instagram gốc. Logo và ảnh tối ưu lưu tại `public/images/opponents/`, `public/images/matches/`; ảnh tin tại `public/images/articles/`. Ảnh gốc `history/` và `news/` được giữ trên máy, không đưa vào Git.
 

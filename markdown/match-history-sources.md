@@ -30,3 +30,14 @@ Kiểm tra: tổng bàn do danh sách người ghi bàn ghi nhận bằng tỷ s
 - Giờ đá: **19:30, 08/10/2026**, múi giờ Việt Nam (`+07:00`). Sân chưa được cung cấp, không tự suy đoán.
 - Người dùng cho biết poster đã đăng Instagram. Truy cập profile chưa lấy được nội dung bài cụ thể; hiện gắn link trang `https://www.instagram.com/chepchepfc/` với nhãn “Theo dõi trên Instagram của đội”, không coi đó là link bài đã đối chiếu.
 - Dữ liệu lưu trong matches.json, status `upcoming`, tỷ số `null`; khối lịch hiển thị trước lịch sử và không tính vào thống kê 10 trận đã đá. Khi có kết quả, đổi status thành `played`, điền tỷ số/người ghi bàn và link bài kết quả.
+
+## Kết quả Hải sản Hà Đông — 08/10/2026
+
+- Ảnh kết quả người dùng cung cấp: `results/igexport-DePaHHvEtCB.jpg`, tối ưu thành `public/images/matches/DePaHHvEtCB.webp`.
+- Ảnh đặt logo Hải sản Hà Đông bên trái (9), FC Chẹp Chẹp bên phải (2): tỷ số theo thứ tự trên web là **FC Chẹp Chẹp 2–9 Hải sản Hà Đông**.
+- Người ghi bàn: **Sứt (MSUT)** và **Cầu Hải**, mỗi người 1 bàn; tổng khớp 2 bàn của đội.
+- Giữ ngày/giờ thi đấu đã xác nhận: 19:30 ngày 08/10/2026 (`+07:00`) và ID trận cũ để cập nhật cùng một trận. Không suy đoán ngày đăng bài.
+- Link bài kết quả theo mã ảnh: https://www.instagram.com/p/DePaHHvEtCB/.
+- Đổi trạng thái sang `played`, thay poster lịch bằng ảnh kết quả; lịch sử hiện có 11 trận.
+
+- BXH ghi bàn cộng 2 bàn vào bảng nền Trận 6: Sứt 9 → 10, thêm Cầu Hải 1; tổng 27 → 29 bàn. Chưa có ảnh/liên kết thành viên của Cầu Hải.
