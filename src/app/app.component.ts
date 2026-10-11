@@ -36,7 +36,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   readonly news = getNews();
   readonly now = signal(Date.now());
-  readonly matchPreferences: { lookingForMatch: boolean; level?: string | null; preferredTime?: string | null } = matchPreferences;
+  readonly matchPreferences: { lookingForMatch: boolean; level?: string | null; preferredTime?: string | null; venue?: string | null } = matchPreferences;
   private matchTimer?: ReturnType<typeof setInterval>;
   readonly matches = computed(() => getMatches().map(match => {
     const kickoff = kickoffTimestamp(match);
